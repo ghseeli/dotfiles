@@ -8,6 +8,8 @@ fi
 # User specific aliases and functions
 unset SSH_ASKPASS
 
+## Colors implementation comes from: http://www.tldp.org/LDP/abs/html/sample-bashrc.html
+
 # Colors
 # Color definitions (taken from Color Bash Prompt HowTo).
 # Some colors might look different of some terminals.
