@@ -200,3 +200,9 @@ export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
 export HISTCONTROL=ignoredups
 export HOSTFILE=$HOME/.hosts    # Put a list of remote hosts in ~/.hosts
 
+# Use local bashrc
+if [ -f ~/.bashrc.local ]; then
+	. ~/.bashrc.local
+fi
+
+

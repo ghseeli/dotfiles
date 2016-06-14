@@ -3,6 +3,14 @@ BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # git identity
 git config --global user.name "George H. Seelinger"
 
+# bash settings
+if [ -f ~/.bashrc ];
+then
+    mv ~/.bashrc ~/.bashrc.local
+fi
+
+ln -s $BASE/.bashrc ~/.bashrc
+
 # vim setup
 if [ -f $HOME/.vimrc ];
 then
