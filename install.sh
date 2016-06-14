@@ -6,15 +6,15 @@ git config --global user.name "George H. Seelinger"
 # vim setup
 if [ -f $HOME/.vimrc ];
 then
-    mv $HOME/.vimrc .vimrc.old
+    mv $HOME/.vimrc $HOME/.vimrc.old
 fi
 if [ -f $HOME/.vim ];
 then
-    mv $HOME/.vim .vim.old
+    mv $HOME/.vim $HOME/.vim.old
 fi
 ln -s $BASE/.vim/.vimrc $HOME/.vimrc
-ln -s $BASE/.vim $HOME/.vim
+ln -s $BASE/.vim $HOME
 
-$BASE/install/install-pathogen.sh
-$BASE/install/install-vim-plugins.sh
+. $BASE/install/install-pathogen.sh
+. $BASE/install/install-vim-plugins.sh
 

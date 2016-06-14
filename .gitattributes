@@ -1,4 +1,4 @@
-*.vim eol=lf
-*.sh eol=lf
-.bashrc eol=lf
-.vim/.vimrc eol=lf
+*.vim text eol=lf
+*.sh text eol=lf
+.bashrc text eol=lf
+.vim/* text eol=lf

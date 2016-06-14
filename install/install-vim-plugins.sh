@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 git submodule init
 
 # Copy attributes files into submodule attributes files
-cp $DIR/../.gitattributes $DIR/../.git/modules/.vim/bundle/vim-latex/info/attributes
+cp $DIR/vim-plugins.gitattributes $DIR/../.git/modules/.vim/bundle/vim-latex/info/attributes
 
 # Download contents
 git submodule update
