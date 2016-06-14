@@ -1,2 +1,4 @@
-*.vim -clrf
-*.sh -clrf
+*.vim eol=lf
+*.sh eol=lf
+.bashrc eol=lf
+.vim/.vimrc eol=lf
