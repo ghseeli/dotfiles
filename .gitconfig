@@ -1,3 +1,10 @@
 [user]
 	name = George H. Seelinger
 	email = ghseeli@gmail.com
+
+[submodule]
+    fetchJobs = 4
+
+[diff]
+    compactionHeuristic = true
+
