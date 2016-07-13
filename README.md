@@ -5,6 +5,10 @@ Thus far, it only includes
 * My universal .bashrc settings.
 * My universal .vim settings.
 
+I am working on the following
+* My gitconfig settings
+* My zsh settings for oh-my-zsh on Mac
+
 To use appropriately, this repository should be cloned
 and then the appropriate symlinks have to be made.
 
