@@ -6,8 +6,25 @@ set wildmenu
 set hlsearch
 
 " Numbering
-set number          " Show line numbers
+set relativenumber          " Show line numbers
 set ruler           " Show column number
+
+function! NumberToggle()    "Toggle between absolute and relative line numbers
+  if(&relativenumber == 1)
+    set number
+  else
+    set relativenumber
+  endif
+endfunc
+
+nnoremap <C-n> :call NumberToggle()<cr>
+
+:au FocusLost * :set number " Return to absolute numbers when vim loses focus
+:au FocusGained * :set relativenumber
+
+autocmd InsertEnter * :set number " Insert mode uses absolute numbers since 
+                                  " movement does not happen in insert mode.
+autocmd InsertLeave * :set relativenumber
 
 " Tab behavior and spacing
 set tabstop=4       " The width of a TAB is set to 4.
