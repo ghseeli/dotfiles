@@ -38,3 +38,5 @@ install_file_mv $BASE/.vim $HOME
 . $BASE/install/install-pathogen.sh
 . $BASE/install/install-vim-plugins.sh
 
+# emacs setup
+install_file_mv $BASE/emacs/.emacs $HOME/.emacs
