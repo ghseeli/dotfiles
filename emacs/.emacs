@@ -7,4 +7,15 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
+(require 'use-package)
+(use-package smartparens-config
+	     :ensure smartparens
+	     :config
+	     (progn
+	       (show-smartparens-global-mode t)))
+
+;;(require 'expand-region)
+;;(global-set-key (kbd "C-=") 'er/expand-region)
+
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+(add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
