@@ -27,5 +27,7 @@
 (use-package ido)
 (use-package smex)
 
+(use-package magit)
+
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 (add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
