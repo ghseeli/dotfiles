@@ -205,4 +205,5 @@ if [ -f ~/.bashrc.local ]; then
 	. ~/.bashrc.local
 fi
 
-
+# added by travis gem
+[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
