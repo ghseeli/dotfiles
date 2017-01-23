@@ -31,6 +31,12 @@ install_file_mv $BASE/.gitconfig ~/.gitconfig
 # bash settings
 install_file_mv $BASE/.bashrc ~/.bashrc
 
+# zsh settings
+if [ -d "~/.oh-my-zsh" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
+install_file_mv $BASE/.zshrc ~/.zshrc
+
 # vim setup
 install_file_mv $BASE/.vim/.vimrc $HOME/.vimrc
 install_file_mv $BASE/.vim $HOME
@@ -40,3 +46,10 @@ install_file_mv $BASE/.vim $HOME
 
 # emacs setup
 install_file_mv $BASE/emacs/.emacs $HOME/.emacs
+
+# OSX
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # install homebrew
+    command -v brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    
+fi
