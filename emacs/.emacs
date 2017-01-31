@@ -25,11 +25,22 @@
 ;;(use-package expand-region)
 ;;(global-set-key (kbd "C-=") 'er/expand-region)
 
+; general productivity
 (use-package ido)
-(use-package smex)
+(use-package smex
+  :bind (("M-x" . smex)
+	 ("M-X" . smex-major-mode-commands)
+	 ("C-c C-c M-x" . execute-extended-command))
+  )
 
+; git support
 (use-package magit)
 
+; flycheck to check things
+(use-package flycheck
+  :init (global-flycheck-mode))
+
+; LaTeX ; eventually should be moved to seperate file.
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 (add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
 (custom-set-variables
@@ -37,7 +48,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (magit smex smartparens use-package))))
+ '(package-selected-packages (quote (auctex magit smex smartparens use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
