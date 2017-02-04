@@ -1,3 +1,6 @@
+;;; package --- summary:
+;;; Commentary:
+;;; Code:
 (set-keyboard-coding-system nil)
 (global-linum-mode t)
 
@@ -9,7 +12,7 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
-; Use-package to replace require
+;; Use-package to replace require
 (load-file "~/dotfiles/emacs/get-use-package.el")
 (require 'use-package)
 
@@ -25,7 +28,7 @@
 ;;(use-package expand-region)
 ;;(global-set-key (kbd "C-=") 'er/expand-region)
 
-; general productivity
+;; general productivity
 (use-package ido)
 (use-package smex
   :bind (("M-x" . smex)
@@ -33,14 +36,20 @@
 	 ("C-c C-c M-x" . execute-extended-command))
   )
 
-; git support
+;; git support
 (use-package magit)
+
+;; ispell
+(use-package ispell)
+(provide 'setup-spell)
+(setq ispell-dictionary "english")
 
 ; flycheck to check things
 (use-package flycheck
   :init (global-flycheck-mode))
 
-; LaTeX ; eventually should be moved to seperate file.
+
+;; LaTeX ; eventually should be moved to seperate file.
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 (add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
 (custom-set-variables

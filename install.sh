@@ -51,5 +51,7 @@ install_file_mv $BASE/emacs/.emacs $HOME/.emacs
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # install homebrew
     command -v brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    # install Mac programs
+    . mac-install.sh
     
 fi
