@@ -24,7 +24,7 @@
 	     :config
 	     (progn
 	       (show-smartparens-global-mode t)))
-
+(smartparens-global-mode 1)
 ;;(use-package expand-region)
 ;;(global-set-key (kbd "C-=") 'er/expand-region)
 
@@ -44,14 +44,14 @@
 (provide 'setup-spell)
 (setq ispell-dictionary "english")
 
-; flycheck to check things
-(use-package flycheck
-  :init (global-flycheck-mode))
+; flycheck to check things ; disabled because it is slowing down big files.
+; (use-package flycheck
+;  :init (global-flycheck-mode))
 
 
 ;; LaTeX ; eventually should be moved to seperate file.
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
-(add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
+;; (add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
