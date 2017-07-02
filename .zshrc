@@ -1,6 +1,8 @@
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
+alias emacs="/usr/local/Cellar/emacs/25.1/bin/emacs -nw"
+
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
@@ -49,7 +51,9 @@ plugins=(git osx nyan)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/heroku/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/textbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/texbin:/Applications/sage:/usr/local/mysql/bin:/usr/local/mysql/bin:/usr/local/mysql/bin"
+export PATH="/usr/local/sbin:/usr/local/heroku/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/textbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/texbin:/Applications/sage:/usr/local/mysql/bin:$PATH"
+# Add TeX
+export PATH="/Library/TeX/texbin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
