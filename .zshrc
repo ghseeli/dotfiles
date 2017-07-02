@@ -51,9 +51,10 @@ plugins=(git osx nyan)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/heroku/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/textbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/texbin:/Applications/sage:/usr/local/mysql/bin:$PATH"
+. $HOME/dotfiles/path/add_paths.sh
+# export PATH="/usr/local/sbin:/usr/local/heroku/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/textbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/texbin:/Applications/sage:/usr/local/mysql/bin:$PATH"
 # Add TeX
-export PATH="/Library/TeX/texbin:$PATH"
+# export PATH="/Library/TeX/texbin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
