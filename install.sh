@@ -47,6 +47,9 @@ install_file_mv $BASE/.vim $HOME
 # emacs setup
 install_file_mv $BASE/emacs/.emacs $HOME/.emacs
 
+# latexmk
+install_file_mv $BASE/.latexmkrc $HOME/.latexmkrc
+
 # OSX
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # install homebrew
