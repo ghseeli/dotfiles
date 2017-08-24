@@ -64,3 +64,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+ ;; Compile LaTeX with latexmk and put outputs into ./out folder.
+(add-hook 'LaTeX-mode-hook (lambda ()
+                 (push 
+                  '("Make" "latexmk -pdf -pv -outdir=./out %t" TeX-run-TeX nil t
+                :help "Make pdf output using latexmk.")
+                  TeX-command-list))) 
+(add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))

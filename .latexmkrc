@@ -1,0 +1,1 @@
+$pdflatex .= '; cp %Z/%B.pdf %Z/../%B.pdf';
