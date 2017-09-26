@@ -211,3 +211,6 @@ fi
 
 # added by travis gem
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+
+# added by travis gem
+[ -f /Users/ghseeli/.travis/travis.sh ] && source /Users/ghseeli/.travis/travis.sh
