@@ -3,7 +3,7 @@ add2path() {
 }
 
 # Stock
-add2path /usr/local/sbin:/usr/textbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin
+add2path /usr/local/sbin:/usr/local/bin:/usr/textbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
 
 # Heroku
 add2path /usr/local/heroku/bin
