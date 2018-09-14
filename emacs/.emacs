@@ -7,9 +7,12 @@
 (require 'package)
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(add-to-list 'package-archives
+	     '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+	     '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives
+	     '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
 ;; Use-package to replace require
@@ -36,6 +39,12 @@
 	 ("C-c C-c M-x" . execute-extended-command))
   )
 
+; avy for jumping to words in file
+(use-package avy
+ :ensure t
+ :config
+ (global-set-key (kbd "C-c j") 'avy-goto-char-2))
+
 ;; git support
 (use-package magit)
 
@@ -44,10 +53,17 @@
 (provide 'setup-spell)
 (setq ispell-dictionary "english")
 
-; flycheck to check things ; disabled because it is slowing down big files.
-; (use-package flycheck
-;  :init (global-flycheck-mode))
+; flycheck to check things
+ (use-package flycheck
+  :init (global-flycheck-mode))
+(setq-default flycheck-disabled-checkers '(tex-lacheck)) ; disabled because it is slowing down big files.
 
+
+; yasnippet for better LaTeX macro-ing
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1))
 
 ;; LaTeX ; eventually should be moved to seperate file.
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
@@ -57,6 +73,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(magit-remote-arguments nil)
+ '(magit-subtree-arguments nil)
  '(package-selected-packages (quote (auctex magit smex smartparens use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -66,8 +84,10 @@
  )
  ;; Compile LaTeX with latexmk and put outputs into ./out folder.
 (add-hook 'LaTeX-mode-hook (lambda ()
-                 (push 
+                 (push
                   '("Make" "latexmk -pdf -interaction=nonstopmode -pv -outdir=./out %t" TeX-run-TeX nil t
                 :help "Make pdf output using latexmk.")
-                  TeX-command-list))) 
+                  TeX-command-list)))
 (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
+(provide '.emacs)
+;;; .emacs ends here
