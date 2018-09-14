@@ -1,3 +1,7 @@
 [submodule ".vim/bundle/vim-latex"]
 	path = .vim/bundle/vim-latex
 	url = git@github.com:vim-latex/vim-latex.git
+
+[submodule "emacs/yasnippets-latex"]
+	path = emacs/yasnippets-latex
+	url = git@github.com:madsdk/yasnippets-latex.git

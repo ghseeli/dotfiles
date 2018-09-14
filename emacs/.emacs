@@ -60,6 +60,8 @@
 
 
 ; yasnippet for better LaTeX macro-ing
+(add-to-list 'load-path
+	     "~/.emacs/yasnippet")
 (use-package yasnippet
   :ensure t
   :init
