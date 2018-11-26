@@ -28,6 +28,7 @@
 	     (progn
 	       (show-smartparens-global-mode t)))
 (smartparens-global-mode 1)
+(sp-local-pair '(LaTeX-mode) "'" "'" :actions nil)
 ;;(use-package expand-region)
 ;;(global-set-key (kbd "C-=") 'er/expand-region)
 

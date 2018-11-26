@@ -40,7 +40,7 @@
 ;; Enable use-package
 (eval-when-compile
   (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
+;(require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
 
 ;;; init-use-package.el ends here

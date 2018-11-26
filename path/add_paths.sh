@@ -3,13 +3,13 @@ add2path() {
 }
 
 # Stock
-add2path /usr/local/sbin:/usr/local/bin:/usr/textbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
+add2path /usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
 
 # Heroku
 add2path /usr/local/heroku/bin
 
 # TeX (OSX)
-add2path /Library/TeX/texbin
+# add2path /Library/TeX/texbin
 
 # Python (OSX)
 add2path /Library/Frameworks/Python.framework/Versions/2.7/bin

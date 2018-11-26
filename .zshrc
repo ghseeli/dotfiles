@@ -1,3 +1,6 @@
+# Start from local.
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
