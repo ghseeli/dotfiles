@@ -4,6 +4,8 @@
 (set-keyboard-coding-system nil)
 (global-linum-mode t)
 
+(setq inhibit-startup-screen t)
+
 (require 'package)
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
@@ -59,6 +61,10 @@
   :init (global-flycheck-mode))
 (setq-default flycheck-disabled-checkers '(tex-lacheck)) ; disabled because it is slowing down big files.
 
+;; color themes
+(use-package sublime-themes
+  :init (progn (load-theme 'spolsky t)))
+
 
 ; yasnippet for better LaTeX macro-ing
 (add-to-list 'load-path
@@ -85,6 +91,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
  ;; Compile LaTeX with latexmk and put outputs into ./out folder.
 (add-hook 'LaTeX-mode-hook (lambda ()
                  (push
