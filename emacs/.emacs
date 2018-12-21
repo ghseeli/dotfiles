@@ -3,6 +3,7 @@
 ;;; Code:
 (set-keyboard-coding-system nil)
 (global-linum-mode t)
+(setq column-number-mode t)
 
 (setq inhibit-startup-screen t)
 
