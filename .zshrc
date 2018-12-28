@@ -4,7 +4,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
-alias emacs="/usr/local/Cellar/emacs/25.1/bin/emacs -nw"
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/

@@ -75,6 +75,8 @@
   :init
   (yas-global-mode 1))
 
+(use-package python-docstring)
+
 ;; LaTeX ; eventually should be moved to seperate file.
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 ;; (add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
@@ -85,7 +87,9 @@
  ;; If there is more than one, they won't work right.
  '(magit-remote-arguments nil)
  '(magit-subtree-arguments nil)
- '(package-selected-packages (quote (auctex magit smex smartparens use-package))))
+ '(package-selected-packages
+   (quote
+    (python-docstring auctex magit smex smartparens use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
