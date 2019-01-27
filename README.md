@@ -1,4 +1,4 @@
-# ghseeli-env
+# My Dotfiles
 This repository is my personal linux environment setup.
 
 Thus far, it only includes
