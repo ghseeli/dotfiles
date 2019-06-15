@@ -8,8 +8,6 @@ fi
 # User specific aliases and functions
 unset SSH_ASKPASS
 
-alias emacs="/usr/local/Cellar/emacs/25.1/bin/emacs"
-
 . $HOME/dotfiles/path/add_paths.sh
 
 ## Colors implementation comes from: http://www.tldp.org/LDP/abs/html/sample-bashrc.html
