@@ -6,16 +6,16 @@
 (setq column-number-mode t)
 
 (setq inhibit-startup-screen t)
+(setq package-check-signature nil)
 
 (require 'package)
+(setq package-enable-at-startup nil)
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
 	     '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
 	     '("gnu" . "https://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
 ;; Use-package to replace require
@@ -77,8 +77,29 @@
 
 (use-package python-docstring)
 
+(use-package tex
+  :ensure auctex
+  :init
+;  (add-hook 'LaTeX-mode-hook (lambda () (flycheck-select-checker 'tex-chktex)))
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+  (add-hook 'LaTeX-mode-hook (lambda ()
+			       (push
+				'("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+				  :help "Run Latexmk on file")
+				TeX-command-list)))
+  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+  (add-hook 'LaTeX-mode-hook 'server-start);
+
+  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+)
+
 ;; LaTeX ; eventually should be moved to seperate file.
-(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+;;(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 ;; (add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -98,11 +119,12 @@
  )
 
  ;; Compile LaTeX with latexmk and put outputs into ./out folder.
-(add-hook 'LaTeX-mode-hook (lambda ()
-                 (push
-                  '("Make" "latexmk -pdf -interaction=nonstopmode -pv -outdir=./out %t" TeX-run-TeX nil t
-                :help "Make pdf output using latexmk.")
-                  TeX-command-list)))
-(add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
+;; (add-hook 'LaTeX-mode-hook (lambda ()
+;;                  (push
+;;                   '("Make" "latexmk -pdf -interaction=nonstopmode -pv -outdir=./out %t" TeX-run-TeX nil t
+;;                 :help "Make pdf output using latexmk.")
+;;                   TeX-command-list)))
+;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
+
 (provide '.emacs)
 ;;; .emacs ends here

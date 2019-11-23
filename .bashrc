@@ -9,6 +9,7 @@ fi
 unset SSH_ASKPASS
 
 . $HOME/dotfiles/path/add_paths.sh
+alias sudo='sudo env PATH=$PATH'
 
 ## Colors implementation comes from: http://www.tldp.org/LDP/abs/html/sample-bashrc.html
 
