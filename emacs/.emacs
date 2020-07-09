@@ -17,6 +17,7 @@
 (add-to-list 'package-archives
 	     '("gnu" . "https://elpa.gnu.org/packages/"))
 (package-initialize)
+(package-refresh-contents)
 
 ;; Use-package to replace require
 (load-file "~/dotfiles/emacs/get-use-package.el")
@@ -43,6 +44,66 @@
 	 ("C-c C-c M-x" . execute-extended-command))
   )
 
+;; evil
+(use-package evil
+  :config
+  (setq evil-want-visual-char-semi-exclusive t)
+  (setq evil-want-fine-undo t)
+  (evil-mode 1))
+
+(use-package key-chord
+  :config
+  (key-chord-mode 1)
+  (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state)
+  (key-chord-define evil-replace-state-map  "jk" 'evil-normal-state)
+  (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state))
+
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1)
+  (evil-add-to-alist
+   'evil-surround-pairs-alist
+   ?\( '("(" . ")")
+   ?\[ '("[" . "]")
+   ?\{ '("{" . "}")
+   ?\) '("( " . " )")
+   ?\] '("[ " . " ]")
+   ?\} '("{ " . " }")))
+
+(use-package paredit)
+
+(use-package embrace
+  :ensure t
+  :config
+  (add-hook 'LaTeX-mode-hook
+    (lambda ()
+      (embrace-add-pair ?e "\\begin{" "}")
+      (embrace-add-pair ?m "\\(" "\\)")
+      (embrace-add-pair ?M "\\[" "\\]")
+      (defun embrace-with-command ()
+	(let ((fname (read-string "Command: ")))
+	  (cons (format "\\%s{" (or fname "")) "}")))
+      (embrace-add-pair-regexp ?c "\\(\\w\\|\\s_\\)+?(" ")" 'embrace-with-command
+                           (embrace-build-help "\command{" "}")))))
+
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1)
+(evil-add-to-alist
+ 'evil-surround-pairs-alist
+ ?\( '("(" . ")")
+ ?\[ '("[" . "]")
+ ?\{ '("{" . "}")
+ ?\) '("( " . " )")
+ ?\] '("[ " . " ]")
+ ?\} '("{ " . " }")))
+
+(use-package evil-embrace
+  :config
+  (evil-embrace-enable-evil-surround-integration))
+
 ; avy for jumping to words in file
 (use-package avy
  :ensure t
@@ -63,8 +124,8 @@
 (setq-default flycheck-disabled-checkers '(tex-lacheck)) ; disabled because it is slowing down big files.
 
 ;; color themes
-(use-package sublime-themes
-  :init (progn (load-theme 'spolsky t)))
+;; (use-package sublime-themes
+;;  :init (progn (load-theme 'spolsky t)))
 
 
 ; yasnippet for better LaTeX macro-ing
@@ -110,13 +171,13 @@
  '(magit-subtree-arguments nil)
  '(package-selected-packages
    (quote
-    (python-docstring auctex magit smex smartparens use-package))))
+    (general python-docstring auctex magit smex smartparens use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:background nil)))))
 
  ;; Compile LaTeX with latexmk and put outputs into ./out folder.
 ;; (add-hook 'LaTeX-mode-hook (lambda ()
@@ -126,5 +187,25 @@
 ;;                   TeX-command-list)))
 ;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
 
+(use-package general)
+
+(general-create-definer my-leader-def
+  :states '(normal)
+  :prefix "SPC")
+
+(my-leader-def
+  "x" 'counsel-M-x
+  "b b" 'switch-to-buffer
+  "b o" 'switch-to-buffer-other-window
+  "b k" 'kill-current-buffer
+  "j j" 'avy-goto-char
+  "j l" 'avy-goto-line
+  "f s" 'save-buffer
+  "f S" 'write-file
+  "h k" 'describe-key
+  "h f" 'describe-function
+  "h m" 'describe-mode
+  "h v" 'describe-variable)
+  
 (provide '.emacs)
 ;;; .emacs ends here
