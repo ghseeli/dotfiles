@@ -138,6 +138,10 @@
 
 (use-package python-docstring)
 
+;; Get the correct texlive in emacs path
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/texlive/2020/bin/x86_64-linux"))
+(setq exec-path (append exec-path '("/usr/local/texlive/2020/bin/x86_64-linux")))
+
 (use-package tex
   :ensure auctex
   :init
@@ -171,7 +175,7 @@
  '(magit-subtree-arguments nil)
  '(package-selected-packages
    (quote
-    (general python-docstring auctex magit smex smartparens use-package))))
+    (disable-mouse general python-docstring auctex magit smex smartparens use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -188,6 +192,20 @@
 ;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
 (add-hook 'LaTeX-mode-hook (lambda () (setq font-lock-maximum-decoration 200)))
 
+;; Disable mouse in graphical emacs
+(use-package disable-mouse)
+(global-disable-mouse-mode)
+
+(mapc #'disable-mouse-in-keymap
+      (list evil-motion-state-map
+	    evil-normal-state-map
+	    evil-visual-state-map
+	    evil-insert-state-map))
+
+;; Be able to undo closing a bunch of windows
+    (when (fboundp 'winner-mode)
+      (winner-mode 1))
+
 (use-package general)
 
 (general-create-definer my-leader-def
@@ -195,18 +213,21 @@
   :prefix "SPC")
 
 (my-leader-def
-  "x" 'counsel-M-x
+  "x" 'smex
   "b b" 'switch-to-buffer
   "b o" 'switch-to-buffer-other-window
   "b k" 'kill-current-buffer
-  "j j" 'avy-goto-char
-  "j l" 'avy-goto-line
   "f s" 'save-buffer
   "f S" 'write-file
+  "f f" 'find-file
   "h k" 'describe-key
   "h f" 'describe-function
   "h m" 'describe-mode
-  "h v" 'describe-variable)
+  "h v" 'describe-variable
+  "j j" 'avy-goto-char
+  "j l" 'avy-goto-line
+  "w u" 'winner-undo
+  "w r" 'winner-redo)
   
 (provide '.emacs)
 ;;; .emacs ends here
