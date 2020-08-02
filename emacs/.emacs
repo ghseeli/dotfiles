@@ -186,6 +186,7 @@
 ;;                 :help "Make pdf output using latexmk.")
 ;;                   TeX-command-list)))
 ;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
+(add-hook 'LaTeX-mode-hook (lambda () (setq font-lock-maximum-decoration 200)))
 
 (use-package general)
 
