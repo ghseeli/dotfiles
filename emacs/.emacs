@@ -175,7 +175,7 @@
  '(magit-subtree-arguments nil)
  '(package-selected-packages
    (quote
-    (disable-mouse general python-docstring auctex magit smex smartparens use-package))))
+    (pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -191,6 +191,13 @@
 ;;                   TeX-command-list)))
 ;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
 (add-hook 'LaTeX-mode-hook (lambda () (setq font-lock-maximum-decoration 200)))
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+    TeX-source-correlate-start-server t)
+  (add-hook 'TeX-after-compilation-finished-functions
+    #'TeX-revert-document-buffer))
 
 ;; Disable mouse in graphical emacs
 (use-package disable-mouse)
