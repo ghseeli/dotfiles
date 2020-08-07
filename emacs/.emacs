@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 (set-keyboard-coding-system nil)
-(global-linum-mode t)
+; (global-linum-mode t)
 (setq column-number-mode t)
 
 (setq inhibit-startup-screen t)
@@ -103,6 +103,9 @@
 (use-package evil-embrace
   :config
   (evil-embrace-enable-evil-surround-integration))
+
+(use-package evil-matchit)
+(global-evil-matchit-mode 1)
 
 ; avy for jumping to words in file
 (use-package avy
