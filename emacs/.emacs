@@ -46,6 +46,19 @@
 	 ("C-c C-c M-x" . execute-extended-command))
   )
 
+(use-package ivy
+  :ensure t
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d%d) ")
+  (setq ivy-use-selectable-prompt t))
+
+(use-package counsel
+  :ensure t
+  :config
+  (counsel-mode 1))
+
 (use-package ace-window
   :ensure t
   :init
@@ -59,6 +72,9 @@
   (evil-mode 1))
 
 (use-package evil-smartparens)
+
+;; git support
+(use-package magit)
 
 (use-package evil-magit)
 
@@ -133,8 +149,6 @@
  :config
  (global-set-key (kbd "C-c j") 'avy-goto-char-2))
 
-;; git support
-(use-package magit)
 
 ;; ispell
 (use-package ispell)
@@ -179,6 +193,11 @@
 
 (my-leader-def 'sage-shell:sage-mode-map
     "c" 'sage-shell-edit:send-buffer)
+
+(general-define-key
+ :states '(normal emacs)
+ :keymaps '(sage-shell-mode-map)
+ "SPC p" 'counsel-shell-history)
 
 ;; Get the correct texlive in emacs path
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/texlive/2020/bin/x86_64-linux"))
@@ -243,6 +262,17 @@
 
 (my-leader-def 'pdf-view-mode-map
   "SPC" 'pdf-view-scroll-up-or-next-page)
+
+(general-define-key
+ :states '(normal emacs)
+ :keymaps '(pdf-view-mode-map)
+ "k" 'pdf-view-previous-line-or-previous-page
+ "j" 'pdf-view-next-line-or-next-page
+ "l" 'image-forward-hscroll
+ "h" 'image-backward-hscroll
+ "C-f" 'pdf-view-scroll-up-or-next-page
+ "C-b" 'pdf-view-scroll-down-or-previous-page)
+
 
 ;; Disable mouse in graphical emacs
 (use-package disable-mouse)
