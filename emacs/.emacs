@@ -290,7 +290,7 @@
 
 
 (my-leader-def
-  "x" 'smex
+  "x" 'counsel-M-x
   "b b" 'switch-to-buffer
   "b o" 'switch-to-buffer-other-window
   "b k" 'kill-current-buffer
