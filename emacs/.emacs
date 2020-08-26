@@ -7,7 +7,13 @@
 
 (setq inhibit-startup-screen t)
 (setq package-check-signature nil)
-
+(setq backup-directory-alist `(("." . "~/.emacs_backups")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)
+(setq vc-make-backup-files t)
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -141,6 +147,7 @@
 
 (general-create-definer my-leader-def
   :states '(normal emacs)
+  :keymaps '(global magit-mode-map)
   :prefix "SPC")
 
 ; avy for jumping to words in file
@@ -271,7 +278,11 @@
  "l" 'image-forward-hscroll
  "h" 'image-backward-hscroll
  "C-f" 'pdf-view-scroll-up-or-next-page
- "C-b" 'pdf-view-scroll-down-or-previous-page)
+ "C-b" 'pdf-view-scroll-down-or-previous-page
+ "gg" 'pdf-view-first-page
+ "G" 'pdf-view-last-page
+ "r" 'revert-buffer
+ ":" 'evil-ex)
 
 
 ;; Disable mouse in graphical emacs
