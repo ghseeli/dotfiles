@@ -70,6 +70,8 @@
   :init
   (setq aw-dispatch-always t))
 
+(use-package gscholar-bibtex)
+
 ;; evil
 (use-package evil
   :config
@@ -89,7 +91,9 @@
   (key-chord-mode 1)
   (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state)
   (key-chord-define evil-replace-state-map  "jk" 'evil-normal-state)
-  (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state))
+  (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state)
+  (key-chord-define evil-insert-state-map  "jj" "\\")
+)
 
 (use-package evil-surround
   :ensure t
