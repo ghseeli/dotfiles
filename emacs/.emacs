@@ -95,37 +95,8 @@
   (key-chord-define evil-insert-state-map  "jj" "\\")
 )
 
-(use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1)
-  (evil-add-to-alist
-   'evil-surround-pairs-alist
-   ?\( '("(" . ")")
-   ?\[ '("[" . "]")
-   ?\{ '("{" . "}")
-   ?\) '("( " . " )")
-   ?\] '("[ " . " ]")
-   ?\} '("{ " . " }")))
 
 (use-package paredit)
-
-(use-package embrace
-  :ensure t
-  :config
-  (add-hook 'LaTeX-mode-hook
-    (lambda ()
-      (embrace-add-pair ?e "\\begin{" "}")
-      (embrace-add-pair ?a "\\begin{align*}" "\\end{align*}")
-      (embrace-add-pair ?E "\\begin{equation}" "\\end{equation}")
-      (embrace-add-pair ?m "\\(" "\\)")
-      (embrace-add-pair ?M "\\[" "\\]")
-      (embrace-add-pair ?l "\\left(" "\\right)")
-      (defun embrace-with-command ()
-	(let ((fname (read-string "Command: ")))
-	  (cons (format "\\%s{" (or fname "")) "}")))
-      (embrace-add-pair-regexp ?c "\\(\\w\\|\\s_\\)+?(" ")" 'embrace-with-command
-                           (embrace-build-help "\command{" "}")))))
 
 (use-package evil-surround
   :ensure t
@@ -139,6 +110,25 @@
  ?\) '("( " . " )")
  ?\] '("[ " . " ]")
  ?\} '("{ " . " }")))
+
+(use-package embrace
+  :ensure t
+  :config
+  (add-hook 'LaTeX-mode-hook
+    (lambda ()
+      (embrace-add-pair ?e "\\begin{" "}")
+      (embrace-add-pair ?a "\\begin{align*}" "\\end{align*}")
+      (embrace-add-pair ?E "\\begin{equation}" "\\end{equation}")
+      (embrace-add-pair ?m "\\(" "\\)")
+      (embrace-add-pair ?M "\\[" "\\]")
+      (embrace-add-pair ?l "\\left(" "\\right)")
+      (embrace-add-pair ?q "``" "''" )
+      (defun embrace-with-command ()
+	(let ((fname (read-string "Command: ")))
+	  (cons (format "\\%s{" (or fname "")) "}")))
+      (embrace-add-pair-regexp ?c "\\(\\w\\|\\s_\\)+?(" ")" 'embrace-with-command
+                           (embrace-build-help "\command{" "}")))))
+
 
 (use-package evil-embrace
   :config
