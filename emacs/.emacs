@@ -236,8 +236,7 @@
  '(magit-remote-arguments nil)
  '(magit-subtree-arguments nil)
  '(package-selected-packages
-   (quote
-    (pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))))
+   '(pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
