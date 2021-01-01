@@ -174,6 +174,16 @@
   :init
   (yas-global-mode 1))
 
+(use-package skeletor
+  :config
+  (skeletor-define-template "coverletter-skeleton"
+    :title "coverletter-skeleton"
+    :no-license? t)
+  (skeletor-define-template "latex-skeleton"
+    :title "latex-skeleton"
+    :no-license? t)
+  )
+
 (use-package python-docstring)
 
 (use-package sage-shell-mode
@@ -236,7 +246,8 @@
  '(magit-remote-arguments nil)
  '(magit-subtree-arguments nil)
  '(package-selected-packages
-   '(pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package)))
+   (quote
+    (pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
