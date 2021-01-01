@@ -34,6 +34,10 @@
 
 (use-package linum-relative)
 
+(use-package exec-path-from-shell)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
 (use-package smartparens-config
 	     :ensure smartparens
 	     :config
@@ -252,6 +256,8 @@
 ;;                   TeX-command-list)))
 ;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
 (add-hook 'LaTeX-mode-hook (lambda () (setq font-lock-maximum-decoration 200)))
+;; test getting to compile on arm Mac
+(setenv "PKG_CONFIG_PATH" "/opt/homebrew/Library/Homebrew/os/mac/pkgconfig/11.1:/opt/homebrew/bin/pkg-config")
 (use-package pdf-tools
   :config
   (pdf-tools-install)
