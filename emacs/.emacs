@@ -76,6 +76,14 @@
 
 (use-package gscholar-bibtex)
 
+(use-package ivy-bibtex
+   :config
+   (setq ivy-re-builders-alist
+       '((ivy-bibtex . ivy--regex-ignore-order)
+	 (t . ivy--regex-plus))))
+
+ (setq ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
+
 ;; evil
 (use-package evil
   :config
@@ -85,10 +93,35 @@
 
 (use-package evil-smartparens)
 
+(use-package evil-org
+    :ensure t
+    :after org
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    ;; (add-hook 'evil-org-mode-hook
+    ;; 	    (lambda ()
+    ;; 	    (evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+
+(evil-set-initial-state 'org-agenda-mode 'emacs)
+
+;; Grammar-check
+(use-package langtool
+  :config
+  (setq langtool-java-bin "/usr/bin/java")
+  (setq langtool-language-tool-jar "~/LanguageTool/languagetool-commandline.jar"))
+
+(use-package langtool-ignore-fonts
+  :load-path "~/.emacs.d/elpa/")
+
 ;; git support
 (use-package magit)
 
 (use-package evil-magit)
+
+(use-package diff-hl)
+(global-diff-hl-mode)
 
 (use-package key-chord
   :config
@@ -164,6 +197,36 @@
  (use-package flycheck
   :init (global-flycheck-mode))
 (setq-default flycheck-disabled-checkers '(tex-lacheck)) ; disabled because it is slowing down big files.
+(flycheck-define-checker textlint
+  "A linter for textlint."
+  :command ("npx" "textlint"
+            "--config" "/home/rob/.emacs.d/.textlintrc"
+            "--format" "unix"
+            "--rule" "write-good"
+            "--rule" "no-start-duplicated-conjunction"
+            "--rule" "max-comma"
+            "--rule" "terminology"
+            "--rule" "period-in-list-item"
+            "--rule" "abbr-within-parentheses"
+            "--rule" "alex"
+            "--rule" "common-misspellings"
+            "--rule" "en-max-word-count"
+            "--rule" "diacritics"
+            "--rule" "stop-words"
+            "--plugin"
+            (eval
+             (if (derived-mode-p 'tex-mode)
+                 "latex"
+               "@textlint/text"))
+            source-inplace)
+  :error-patterns
+  ((warning line-start (file-name) ":" line ":" column ": "
+            (message (one-or-more not-newline)
+                     (zero-or-more "\n" (any " ") (one-or-more not-newline)))
+            line-end))
+  :modes (text-mode latex-mode org-mode markdown-mode)
+  )
+(add-to-list 'flycheck-checkers 'textlint)
 
 ;; color themes
 ;; (use-package sublime-themes
@@ -186,13 +249,22 @@
   (skeletor-define-template "latex-skeleton"
     :title "latex-skeleton"
     :no-license? t)
+  (skeletor-define-template "worksheet-skeleton"
+    :title "worksheet-skeleton"
+    :substitutions
+    '(("__WORKSHEETNUM__" . (lambda () (read-string "Worksheet Number: "))) ("__SECTIONNUM__" . (lambda () (read-string "Section Number: "))))
+    ;; '(("__DESCRIPTION__" . (lambda () (read-string "Description: "))))
+    ;; :substitutions
+    ;; 
+    ;; :substitutions
+    :no-license? t)
   )
 
 (use-package python-docstring)
 
 (use-package sage-shell-mode
     :init
-    (setq sage-shell:sage-root "~/sage"))
+    (setq sage-shell:sage-executable "~/sage"))
 
 (defun send-to-sage-and-switch ()
     "Send buffer to sage and switch to sage buffer."
@@ -213,6 +285,11 @@
  :states '(normal emacs)
  :keymaps '(sage-shell-mode-map)
  "SPC p" 'counsel-shell-history)
+
+;; Gap-mode
+(use-package gap-mode
+    :init
+    (setq gap-executable "/Applications/gap/bin/gap.sh"))
 
 ;; Get the correct texlive in emacs path
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/texlive/2020/bin/x86_64-linux"))
@@ -250,8 +327,9 @@
  '(magit-remote-arguments nil)
  '(magit-subtree-arguments nil)
  '(package-selected-packages
-   (quote
-    (pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))))
+   '(evil-org pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))
+ '(sage-shell:use-prompt-toolkit nil)
+ '(sage-shell:use-simple-prompt t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -268,7 +346,8 @@
 ;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
 (add-hook 'LaTeX-mode-hook (lambda () (setq font-lock-maximum-decoration 200)))
 ;; test getting to compile on arm Mac
-(setenv "PKG_CONFIG_PATH" "/opt/homebrew/Library/Homebrew/os/mac/pkgconfig/11.1:/opt/homebrew/bin/pkg-config")
+;; (setenv "CPATH" "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include")
+;; (setenv "PKG_CONFIG_PATH" "/opt/homebrew/Library/Homebrew/os/mac/pkgconfig/11.1")
 (use-package pdf-tools
   :config
   (pdf-tools-install)
@@ -276,6 +355,9 @@
     TeX-source-correlate-start-server t)
   (add-hook 'TeX-after-compilation-finished-functions
     #'TeX-revert-document-buffer))
+
+;; To help with scaled displays
+(setq pdf-view-use-scaling t)
 
 (my-leader-def 'pdf-view-mode-map
   "SPC" 'pdf-view-scroll-up-or-next-page)
@@ -336,7 +418,66 @@
   "w 2" 'split-window-vertically
   "w 3" 'split-window-horizontally
   "w u" 'winner-undo
-  "w r" 'winner-redo)
+  "w r" 'winner-redo
+  "o a" 'org-agenda
+  "o c c" 'org-capture
+  "o c i" 'org-clock-in
+  "o c o" 'org-clock-out
+  )
+
+
+;; Borrowed from Chris Lloyd to search current LaTeX project for all the labels and then insert one using the completion framework. Based on the reftex function goto-label.
+
+(defun my-ref-label (&optional other-window)
+  "Prompt for a label (with completion) and insert a reference to it."
+  (interactive "P")
+  (reftex-access-scan-info)
+  (let* ((docstruct (symbol-value reftex-docstruct-symbol))
+	 ;; If point is inside a \ref{} or \pageref{}, use that as
+	 ;; default value.
+	 (default (when (looking-back "\\\\\\(?:page\\)?ref{[-a-zA-Z0-9_*.:]*"
+                                      (line-beginning-position))
+		    (reftex-this-word "-a-zA-Z0-9_*.:")))
+         (label (completing-read (if default
+				     (format "Label (default %s): " default)
+				   "Label: ")
+				 docstruct
+                                 (lambda (x) (stringp (car x))) t nil nil
+				 default)))
+    (insert (concat "\\ref{" label "}"))))
   
+(my-leader-def 'LaTeX-mode-map
+  "r r" 'ivy-bibtex-with-local-bibliography
+  "r l" 'my-label-ref
+  )
+
+;; org-mode
+(setq org-directory "~/Documents/org")
+(setq org-agenda-files '("~/Documents/org"))
+(setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-default-notes-file (concat org-directory "/refile.org"))
+
+;; Capture templates for: TODO tasks, Notes, phone calls, meetings
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/Documents/org/refile.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("n" "note" entry (file "~/Documents/org/refile.org")
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("m" "Meeting" entry (file "~/Documents/org/refile.org")
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+              ("p" "Phone call" entry (file "~/Documents/org/refile.org")
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+	     )))
+
+;; Remove empty LOGBOOK drawers on clock out
+(defun bh/remove-empty-drawer-on-clock-out ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line 0)
+    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+
+(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+
+
 (provide '.emacs)
 ;;; .emacs ends here

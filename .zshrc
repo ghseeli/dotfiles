@@ -1,5 +1,3 @@
-# Start from local.
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
@@ -88,3 +86,6 @@ source $ZSH/oh-my-zsh.sh
 
 # added by travis gem
 [ -f /Users/ghseeli/.travis/travis.sh ] && source /Users/ghseeli/.travis/travis.sh
+
+# End with local.
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
