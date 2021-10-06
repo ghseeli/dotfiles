@@ -59,6 +59,7 @@
 (use-package ivy
   :ensure t
   :config
+;  :diminish ivy-mode
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d%d) ")
@@ -67,6 +68,7 @@
 (use-package counsel
   :ensure t
   :config
+;  :diminish counsel-mode
   (counsel-mode 1))
 
 (use-package ace-window
@@ -84,6 +86,7 @@
 
  (setq ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
 
+
 ;; evil
 (use-package evil
   :config
@@ -96,6 +99,7 @@
 (use-package evil-org
     :ensure t
     :after org
+    :diminish evil-org-mode
     :config
     (add-hook 'org-mode-hook 'evil-org-mode)
     ;; (add-hook 'evil-org-mode-hook
@@ -106,6 +110,11 @@
 
 (evil-set-initial-state 'org-agenda-mode 'emacs)
 
+;; undo-tree
+(use-package undo-tree)
+(global-undo-tree-mode)
+(evil-set-undo-system 'undo-tree)
+
 ;; Grammar-check
 (use-package langtool
   :config
@@ -113,7 +122,8 @@
   (setq langtool-language-tool-jar "~/LanguageTool/languagetool-commandline.jar"))
 
 (use-package langtool-ignore-fonts
-  :load-path "~/.emacs.d/elpa/")
+  :config
+  (add-hook 'LaTeX-mode-hook 'langtool-ignore-fonts-minor-mode))
 
 ;; git support
 (use-package magit)
@@ -184,8 +194,9 @@
 ; avy for jumping to words in file
 (use-package avy
  :ensure t
- :config
- (global-set-key (kbd "C-c j") 'avy-goto-char-2))
+ ;; :config
+ ;; (global-set-key (kbd "C-c j") 'avy-goto-char-2)
+ )
 
 
 ;; ispell
@@ -238,8 +249,11 @@
 	     "~/.emacs/yasnippet")
 (use-package yasnippet
   :ensure t
+  :diminish yasnippet-mode
   :init
   (yas-global-mode 1))
+(advice-add 'yas--on-protection-overlay-modification
+ :override #'ignore)
 
 (use-package skeletor
   :config
@@ -252,12 +266,17 @@
   (skeletor-define-template "worksheet-skeleton"
     :title "worksheet-skeleton"
     :substitutions
-    '(("__WORKSHEETNUM__" . (lambda () (read-string "Worksheet Number: "))) ("__SECTIONNUM__" . (lambda () (read-string "Section Number: "))))
+    '(("__WORKSHEETNUM__" . (lambda () (read-string "Worksheet Number: "))) ("__SECTIONNUM__" . (lambda () (read-string "Section Number: ")))))
+  (skeletor-define-template "quiz-skeleton"
+    :title "quiz-skeleton"
+    :substitutions
+    '(("__QUIZNUM__" . (lambda () (read-string "Quiz Number: "))))
+    )
+  
     ;; '(("__DESCRIPTION__" . (lambda () (read-string "Description: "))))
     ;; :substitutions
     ;; 
     ;; :substitutions
-    :no-license? t)
   )
 
 (use-package python-docstring)
@@ -285,6 +304,31 @@
  :states '(normal emacs)
  :keymaps '(sage-shell-mode-map)
  "SPC p" 'counsel-shell-history)
+
+;; ob-sagemath to support sage with org-babel
+(use-package ob-sagemath)
+
+;; Ob-sagemath supports only evaluating with a session.
+(setq org-babel-default-header-args:sage '((:session . t)
+                                           (:results . "output")))
+
+(setq org-src-fontify-natively t)
+
+;; C-c c for asynchronous evaluating (only for SageMath code blocks).
+(with-eval-after-load "org"
+  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
+
+;; Do not confirm before evaluation
+(setq org-confirm-babel-evaluate nil)
+
+;; Do not evaluate code blocks when exporting.
+(setq org-export-babel-evaluate nil)
+
+;; Show images when opening a file.
+(setq org-startup-with-inline-images t)
+
+;; Show images after evaluating code blocks.
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
 ;; Gap-mode
 (use-package gap-mode
@@ -327,7 +371,7 @@
  '(magit-remote-arguments nil)
  '(magit-subtree-arguments nil)
  '(package-selected-packages
-   '(evil-org pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))
+   '(tiny org-inline-pdf undo-tree ebib org-ref simple-httpd websocket org-fragtog org wikinforg xmind-org org-roam diminish smart-mode-line rich-minority org-journal evil-org pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))
  '(sage-shell:use-prompt-toolkit nil)
  '(sage-shell:use-simple-prompt t))
 (custom-set-faces
@@ -378,7 +422,9 @@
 
 
 ;; Disable mouse in graphical emacs
-(use-package disable-mouse)
+(use-package disable-mouse
+  :diminish disable-mouse-mode
+  )
 (global-disable-mouse-mode)
 
 (mapc #'disable-mouse-in-keymap
@@ -405,6 +451,7 @@
   "h f" 'describe-function
   "h m" 'describe-mode
   "h v" 'describe-variable
+  "i" 'yas-insert-snippet
   "j j" 'avy-goto-char
   "j l" 'avy-goto-line
   "w w" 'ace-window
@@ -423,9 +470,61 @@
   "o c c" 'org-capture
   "o c i" 'org-clock-in
   "o c o" 'org-clock-out
+  "o j j" 'org-journal-new-entry
+  "o s" 'org-search-view
+  "o r f" 'org-roam-node-find
+  "o r i" 'org-roam-node-insert
   )
 
+(defun insert-deadline-after () (interactive)
+       (progn
+	 (forward-char)
+	 (call-interactively 'org-time-stamp)
+	 ))
 
+(general-define-key
+ :keymaps 'org-mode-map
+ "C-c C-." 'insert-deadline-after
+ )
+
+;;
+;; (use-package smart-mode-line
+;;    :ensure t
+;;    :config
+;;   (setq rm-blacklist '(" Undo-Tree"
+;; 			 " ivy"
+;; 			 " counsel"
+;; 			 " yas"
+;; 			 " SP"
+;; 			 " WK"
+;; 			 " ElDoc"
+;; 			 " Fly"
+;; 			 " EvilOrg"
+;; 			 " s-/"))
+;;   (add-hook 'after-init-hook 'sml/setup)
+;; )
+;; (use-package rich-minority
+;;   :ensure t
+;;   :after powerline
+;;   :config
+;;   (rich-minority-mode 1)
+;;   (setq rm-blacklist '(" Undo-Tree"
+;; 			 " ivy"
+;; 			 " counsel"
+;; 			 " yas"
+;; 			 " SP"
+;; 			 " WK"
+;; 			 " ElDoc"
+;; 			 " Fly"
+;; 			 " EvilOrg"
+;; 			 " s-/"))
+;;   )
+(use-package diminish)
+;; (diminish 'ivy-mode)
+;; (diminish 'counsel-mode)
+;; (diminish 'ElDoc-mode)
+;; (diminish 'yas-mode)
+;; (diminish 'disable-mouse-mode)
 ;; Borrowed from Chris Lloyd to search current LaTeX project for all the labels and then insert one using the completion framework. Based on the reftex function goto-label.
 
 (defun my-ref-label (&optional other-window)
@@ -452,9 +551,27 @@
   )
 
 ;; org-mode
+
 (setq org-directory "~/Documents/org")
 (setq org-agenda-files '("~/Documents/org"))
+(add-hook 'org-mode-hook 'turn-on-flyspell)
+(with-eval-after-load 'org
+  (add-hook 'org-mode-hook #'visual-line-mode)
+)
+(setq org-image-actual-width nil)
+
+(setq org-list-demote-modify-bullet (quote (("+" . "-")
+					    ("-" . "+")
+					    )))
+
+;; only show scheduled events in the agenda once it is the scheduled day
 (setq org-agenda-todo-ignore-scheduled 'future)
+
+;; Todo keywords
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)"))))
+
+;; Send captured tasks to refile.org
 (setq org-default-notes-file (concat org-directory "/refile.org"))
 
 ;; Capture templates for: TODO tasks, Notes, phone calls, meetings
@@ -469,15 +586,125 @@
                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
 	     )))
 
+;; Refiling
+ (setq org-refile-targets
+       '((nil :maxlevel . 9)
+         (org-agenda-files :maxlevel . 9)))
+
+; Exclude DONE state tasks from refile targets
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
+
+;; Automatically get the files in "~/Documents/org"
+;; with fullpath
+ (setq org-agenda-files 
+       (mapcar 'file-truename 
+	      (file-expand-wildcards "~/Documents/org/*.org")))
+
+;; Save the corresponding buffers
+(defun gtd-save-org-buffers ()
+  "Save `org-agenda-files' buffers without user confirmation.
+See also `org-save-all-org-buffers'"
+  (interactive)
+  (message "Saving org-agenda-files buffers...")
+  (save-some-buffers t (lambda () 
+			 (when (member (buffer-file-name) org-agenda-files) 
+			   t)))
+  (message "Saving org-agenda-files buffers... done"))
+
+;; Add it after refile
+(advice-add 'org-refile :after
+	    (lambda (&rest _)
+	      (gtd-save-org-buffers)))
+
+;; Clocking
+;; Show lots of clocking history
+(setq org-clock-history-length 23)
+;; Save the running clock and all clock history when exiting Emacs, load it on startup
+(setq org-clock-persist t)
 ;; Remove empty LOGBOOK drawers on clock out
+(setq org-clock-out-remove-zero-time-clocks t)
+
 (defun bh/remove-empty-drawer-on-clock-out ()
   (interactive)
   (save-excursion
     (beginning-of-line 0)
-    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+    (org-remove-empty-drawer-at (point))))
 
 (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 
+;; use pretty things for the clocktable
+;;(setq org-pretty-entities t)
 
+(use-package org-inline-pdf)
+(add-hook 'org-mode-hook #'org-inline-pdf-mode)
+
+;; Journaling
+(use-package org-journal
+:ensure t
+  :defer t
+  :init
+  ;; Change default prefix key; needs to be set before loading org-journal
+  :config
+  (setq org-journal-dir "~/Documents/org/journal/"
+        org-journal-date-format "%A, %d %B %Y"
+	org-journal-file-type 'weekly))
+
+;; Disable evil in emacs calendar so org-journal keybindings work.
+(evil-set-initial-state 'calendar-mode 'emacs)
+
+;; Tiny for creating linear ranges in org
+(use-package tiny)
+(tiny-setup-default)
+(global-set-key (kbd "C-;") #'tiny-expand)
+
+;; org-roam
+(use-package org-roam
+  :ensure t
+  :custom 
+  (org-roam-directory (file-truename "~/Documents/org-roam/"))
+  :config
+  (org-roam-db-autosync-enable)
+  )
+  
+(setq org-roam-capture-templates '(("d" "default" plain "%?"
+    :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+		       "#+SETUPFILE: ~/dotfiles/emacs/tex_style.org\n#+title: ${title}\n#+STARTUP: latexpreview\n#+STARTUP: overview\n"
+		       )
+    :unnarrowed t)) )
+
+(setq org-roam-v2-ack t)
+
+;(setq org-roam-directory (file-truename "~/Documents/org-roam/"))
+;(org-roam-db-autosync-mode)
+
+(add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
+(load-library "org-roam-ui")
+
+(use-package org-fragtog)
+(add-hook 'org-mode-hook 'org-fragtog-mode)
+
+; (use-package org-ref)
+
+(setq bibtex-completion-bibliography '("~/Documents/org/research_bibliography.bib" "~/Documents/org/other.bib"))
+(setq bibtex-completion-library-path '("~/Dropbox (University of Michigan)/pdfs"))
+(setq bibtex-completion-notes-path "~/Documents/org")
+(use-package ebib)
+
+(setq org-cite-global-bibliography '("~/Documents/org/research_bibliography.bib" "~/Documents/org/other.bib"))
+
+;; compatibility with ivy-bibtex
+;; (require 'org-ref-ivy)
+
+;; (setq org-ref-insert-link-function 'org-ref-insert-link-hydra/body
+;;       org-ref-insert-cite-function 'org-ref-cite-insert-ivy
+;;       org-ref-insert-label-function 'org-ref-insert-label-link
+;;       org-ref-insert-ref-function 'org-ref-insert-ref-link
+;;       org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body)))
+
+;;
 (provide '.emacs)
 ;;; .emacs ends here

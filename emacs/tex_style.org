@@ -1,0 +1,133 @@
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsfonts}
+#+LaTeX_HEADER: \usepackage{amssymb}
+#+LaTeX_HEADER: \usepackage{bbm}
+#+LaTeX_HEADER: \usepackage{stmaryrd}
+#+LaTeX_HEADER: \usepackage{textgreek}
+#+LaTeX_HEADER: \usepackage{tikz} 
+#+LaTeX_HEADER: \usepackage{tikz-cd} 
+#+LaTeX_HEADER: \usepackage{graphicx, tipa} 
+#+LaTeX_HEADER: \usepackage{mathrsfs}
+#+LaTeX_HEADER: \usepackage{ytableau}
+#+LaTeX_HEADER: \newcommand{\N}{{\mathbb N}} % natural numbers
+#+LaTeX_HEADER: \newcommand{\Z}{{\mathbb Z}} % integers
+#+LaTeX_HEADER: \newcommand{\Q}{{\mathbb Q}} % rational numbers
+#+LaTeX_HEADER: \newcommand{\R}{{\mathbb R}} % real numbers
+#+LaTeX_HEADER: \newcommand{\C}{{\mathbb C}} % complex numbers
+#+LaTeX_HEADER: \newcommand{\D}{{\mathbb D}} % unit disk
+#+LaTeX_HEADER: \newcommand{\F}{{\mathbb F}} % field
+#+LaTeX_HEADER: \newcommand{\ov}{\overline} % shorthand for a bar on a symbol
+#+LaTeX_HEADER: \newcommand{\divides}{\mid} % longhand for divides
+#+LaTeX_HEADER: \newcommand{\notdivides}{\nmid} % longhand for not divides
+#+LaTeX_HEADER: \newcommand{\identically}{\equiv} % longhand for function is
+#+LaTeX_HEADER: \newcommand{\propersubset}{\subsetneqq} % proper subset
+#+LaTeX_HEADER: \newcommand{\propsubset}{\propersubset} 
+#+LaTeX_HEADER: \newcommand{\congruent}{\equiv} % longhand for congruent
+#+LaTeX_HEADER: \newcommand{\isom}{\cong} % isomorphic
+#+LaTeX_HEADER: \newcommand{\intersect}{\cap} 
+#+LaTeX_HEADER: \newcommand{\Intersect}{\bigcap}
+#+LaTeX_HEADER: \newcommand{\union}{\cup}
+#+LaTeX_HEADER: \newcommand{\Union}{\bigcup}
+#+LaTeX_HEADER: \newcommand{\disjunion}{\sqcup} % disjoint union
+#+LaTeX_HEADER: \newcommand{\Disjunion}{\bigsqcup} % Big disjoint union
+#+LaTeX_HEADER: \newcommand{\dunion}{\disjunion}
+#+LaTeX_HEADER: \newcommand{\Dunion}{\Disjunion}
+#+LaTeX_HEADER: \newcommand{\from}{\colon}
+#+LaTeX_HEADER: \newcommand{\into}{\hookrightarrow} % injective arrow
+#+LaTeX_HEADER: \newcommand{\onto}{\twoheadrightarrow} % surjective arrow
+#+LaTeX_HEADER: \newcommand{\correspondsto}{\leftrightarrow} % correspondance arrow
+#+LaTeX_HEADER: \newcommand{\onetoonecorrespondence}{\overset{1\text{-}1}{\longleftrightarrow}}% one-to-one correspondance arrow
+#+LaTeX_HEADER: \newcommand{\isomto}{\overset{\sim}{\to}} % isomorphism arrow
+#+LaTeX_HEADER: \newcommand{\suchthat}{\mid} % for power set notation
+#+LaTeX_HEADER: \newcommand{\st}{\suchthat} % shorthand for such that
+#+LaTeX_HEADER: \newcommand{\unique}{!} % long form for unique
+#+LaTeX_HEADER: \DeclareMathOperator{\Span}{span}
+#+LaTeX_HEADER: \DeclareMathOperator{\rank}{rank}
+#+LaTeX_HEADER: \newcommand{\rk}{\rank}
+#+LaTeX_HEADER: \DeclareMathOperator{\codim}{codim}
+#+LaTeX_HEADER: \newcommand{\catname}[1]{{\normalfont\textbf{#1}}}
+#+LaTeX_HEADER: \newcommand{\derivcat}{\mathcal{D}}
+#+LaTeX_HEADER: \renewcommand{\emptyset}{{\varnothing}}
+#+LaTeX_HEADER: \renewcommand{\implies}{\mathrel{\Longrightarrow}}
+#+LaTeX_HEADER: \renewcommand{\impliedby}{\mathrel{\Longleftarrow}}
+#+LaTeX_HEADER: \renewcommand{\iff}{\mathrel{\Longleftrightarrow}}
+#+LaTeX_HEADER: \renewcommand{\subset}{\subseteq}
+#+LaTeX_HEADER: \renewcommand{\supset}{\supseteq}
+#+LaTeX_HEADER: \newcommand{\subgroup}{\mathrel{\leq}}
+#+LaTeX_HEADER: \newcommand{\propsubgroup}{\mathrel{\lneqq}}
+#+LaTeX_HEADER: \newcommand{\normsubgroup}{\mathrel{\unlhd}}
+#+LaTeX_HEADER: \newcommand{\ideal}{\mathrel{\unlhd}}
+#+LaTeX_HEADER: \newcommand{\submodule}{\subgroup}
+#+LaTeX_HEADER: \newcommand{\Sym}{\mathfrak{S}} % symmetic group
+#+LaTeX_HEADER: \newcommand{\Inn}{\operatorname{Inn}} % inner automorphism
+#+LaTeX_HEADER: \newcommand{\Aut}{\operatorname{Aut}} % automorphism
+#+LaTeX_HEADER: \newcommand{\End}{\operatorname{End}} % endomorphism
+#+LaTeX_HEADER: \newcommand{\Hom}{\operatorname{Hom}} % Hom space
+#+LaTeX_HEADER: \newcommand{\Ext}{\operatorname{Ext}} % Ext functor
+#+LaTeX_HEADER: \newcommand{\Tor}{\operatorname{Tor}} % Tor functor
+#+LaTeX_HEADER: \newcommand{\Stab}{\operatorname{Stab}} % stabilizer  
+#+LaTeX_HEADER: \newcommand{\Ann}{\operatorname{Ann}} % annihilator
+#+LaTeX_HEADER: \newcommand{\coker}{\operatorname{coker}} % cokernel
+#+LaTeX_HEADER: \newcommand{\Char}{\operatorname{char}} % characteristic
+#+LaTeX_HEADER: \newcommand{\im}{\operatorname{im}} % image
+#+LaTeX_HEADER: \newcommand{\tr}{\operatorname{tr}} % trace
+#+LaTeX_HEADER: \newcommand{\rad}{\operatorname{rad}} % radical
+#+LaTeX_HEADER: \newcommand{\ad}{\operatorname{ad}} % adjoint
+#+LaTeX_HEADER: \newcommand{\Ad}{\operatorname{Ad}} % Adjoint
+#+LaTeX_HEADER: \newcommand{\g}{{\mathfrak g}} 
+#+LaTeX_HEADER: \newcommand{\h}{{\mathfrak h}}
+#+LaTeX_HEADER: \newcommand{\gl}{\mathfrak{gl}}
+#+LaTeX_HEADER: \renewcommand{\sl}{\mathfrak{sl}} 
+#+LaTeX_HEADER: \newcommand{\n}{\mathfrak{n}}
+#+LaTeX_HEADER: \renewcommand{\b}{\mathfrak{b}}
+#+LaTeX_HEADER: \newcommand{\p}{\mathfrak{p}}
+#+LaTeX_HEADER: \newcommand{\RP}{\mathbb{RP}} % Real Projective Plane
+#+LaTeX_HEADER: \newcommand{\CP}{\mathbb{CP}} % Complex Projective Plane
+#+LaTeX_HEADER: \newcommand{\cupprod}{\smile} % Cup product
+#+LaTeX_HEADER: \newcommand{\kk}{{\mathbbm k}}
+#+LaTeX_HEADER: \newcommand{\aA}{{\mathbf a}}
+#+LaTeX_HEADER: \newcommand{\bb}{{\mathbf b}}
+#+LaTeX_HEADER: \newcommand{\dd}{{\mathbf d}}
+#+LaTeX_HEADER: \newcommand{\ee}{{\mathbf e}}
+#+LaTeX_HEADER: \newcommand{\gG}{{\mathbf g}}
+#+LaTeX_HEADER: \newcommand{\rr}{{\mathbf r}}
+#+LaTeX_HEADER: \newcommand{\sS}{{\mathbf s}}
+#+LaTeX_HEADER: \newcommand{\xx}{{\mathbf x}}
+#+LaTeX_HEADER: \newcommand{\yy}{{\mathbf y}}
+#+LaTeX_HEADER: \newcommand{\zz}{{\mathbf z}}
+#+LaTeX_HEADER: \newcommand{\Hbold}{{\mathbf H}}
+#+LaTeX_HEADER: \newcommand{\Sbold}{{\mathbf S}}
+#+LaTeX_HEADER: \newcommand{\sigmabold}{{\boldsymbol \sigma }}
+#+LaTeX_HEADER: \newcommand{\alphabold}{{\boldsymbol \alpha }}
+#+LaTeX_HEADER: \newcommand{\betabold}{{\boldsymbol \beta }}
+#+LaTeX_HEADER: \newcommand{\gammabold}{{\boldsymbol \gamma }}
+#+LaTeX_HEADER: \newcommand{\nubold}{{\boldsymbol \nu }}
+#+LaTeX_HEADER: \newcommand{\onebold}{{\boldsymbol 1}}
+#+LaTeX_HEADER: \newcommand{\deltabold}{{\boldsymbol \delta }}
+#+LaTeX_HEADER: \newcommand{\epsbold}{{\boldsymbol \varepsilon }}
+#+LaTeX_HEADER: \newcommand{\Acal}{{\mathcal A}}
+#+LaTeX_HEADER: \newcommand{\Ecal}{{\mathcal E}}
+#+LaTeX_HEADER: \newcommand{\Gcal}{{\mathcal G}}
+#+LaTeX_HEADER: \newcommand{\Hcal}{{\mathcal H}}
+#+LaTeX_HEADER: \newcommand{\Lcal}{{\mathcal L}}
+#+LaTeX_HEADER: \newcommand{\Scal}{{\mathcal S}}
+#+LaTeX_HEADER: \newcommand{\ctild}{\tilde{c}}
+#+LaTeX_HEADER: \newcommand{\Htild}{\tilde{H}}
+#+LaTeX_HEADER: \newcommand{\chat}{\hat{c}}
+#+LaTeX_HEADER: \newcommand{\sigmahat}{\widehat{\sigma }}
+#+LaTeX_HEADER: \newcommand{\jhat}{\widehat{\jmath}}
+#+LaTeX_HEADER: \DeclareMathOperator{\area}{area}
+#+LaTeX_HEADER: \DeclareMathOperator{\dinv}{dinv}
+#+LaTeX_HEADER: \DeclareMathOperator{\inv}{inv}
+#+LaTeX_HEADER: \DeclareMathOperator{\modm}{mod}
+#+LaTeX_HEADER: \DeclareMathOperator{\pol}{pol}
+#+LaTeX_HEADER: \DeclareMathOperator{\adj}{adj}
+#+LaTeX_HEADER: \DeclareMathOperator{\spin}{spin}
+#+LaTeX_HEADER: \DeclareMathOperator{\sgn}{sgn}
+#+LaTeX_HEADER: \DeclareMathOperator{\sshare}{ss}
+#+LaTeX_HEADER: \DeclareMathOperator{\Inv}{Inv}
+#+LaTeX_HEADER: \DeclareMathOperator{\GL}{{\it GL}}
+#+LaTeX_HEADER: \DeclareMathOperator{\SYT}{SYT}
+#+LaTeX_HEADER: \DeclareMathOperator{\SSYT}{SSYT}
+#+LaTeX_HEADER: \DeclareMathOperator{\LNDP}{LNDP}
+#+LaTeX_HEADER: \DeclareMathOperator{\diag}{diag}
