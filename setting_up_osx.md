@@ -24,3 +24,4 @@ Notes on setting up an OS X system
 1. Give emacs and `/usr/bin/ruby` full filesystem access
 
   Under Settings -> Security & Privacy, this setting is necessary so emacs can browse files in the filesystem.
+Note, /usr is usually a hidden folder and may not appear by default. If so, press shift+cmd+. (the last one is a dot) at the root directory to make it appear.
