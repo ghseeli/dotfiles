@@ -19,8 +19,6 @@
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
 	     '("gnu" . "https://elpa.gnu.org/packages/"))
 (package-initialize)
 ;; (package-refresh-contents)
@@ -131,7 +129,7 @@
 ;; git support
 (use-package magit)
 
-(use-package evil-magit)
+;;(use-package evil-magit)
 
 (use-package diff-hl)
 (global-diff-hl-mode)
@@ -568,6 +566,7 @@
 (setq org-list-demote-modify-bullet (quote (("+" . "-")
 					    ("-" . "+")
 					    )))
+(setq org-list-allow-alphabetical t)
 
 ;; only show scheduled events in the agenda once it is the scheduled day
 (setq org-agenda-todo-ignore-scheduled 'future)
@@ -686,6 +685,7 @@ See also `org-save-all-org-buffers'"
 ;(setq org-roam-directory (file-truename "~/Documents/org-roam/"))
 ;(org-roam-db-autosync-mode)
 
+(use-package org-roam-ui)
 (add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
 (load-library "org-roam-ui")
 
