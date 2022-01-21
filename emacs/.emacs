@@ -30,6 +30,9 @@
 ; Download packages if they are missing.
 (setq use-package-always-ensure t)
 
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
+
 (use-package linum-relative)
 
 (use-package exec-path-from-shell)
@@ -359,6 +362,8 @@
   (setq reftex-plug-into-AUCTeX t)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 )
+
+
 
 ;; LaTeX ; eventually should be moved to seperate file.
 ;;(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
