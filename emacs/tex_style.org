@@ -16,6 +16,8 @@
 #+LaTeX_HEADER: \newcommand{\C}{{\mathbb C}} % complex numbers
 #+LaTeX_HEADER: \newcommand{\D}{{\mathbb D}} % unit disk
 #+LaTeX_HEADER: \newcommand{\F}{{\mathbb F}} % field
+#+LaTeX_HEADER: \newcommand{\A}{{\mathbb A}} % affine space 
+#+LaTeX_HEADER: \newcommand{\PP}{{\mathbb P}} % affine space 
 #+LaTeX_HEADER: \newcommand{\ov}{\overline} % shorthand for a bar on a symbol
 #+LaTeX_HEADER: \newcommand{\divides}{\mid} % longhand for divides
 #+LaTeX_HEADER: \newcommand{\notdivides}{\nmid} % longhand for not divides

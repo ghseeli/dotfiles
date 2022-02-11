@@ -33,6 +33,13 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;; GPG key to use for encryption
+;; Either the Key ID or set to nil to use symmetric encryption.
+(setq org-crypt-key nil)
+
 (use-package linum-relative)
 
 (use-package exec-path-from-shell)
@@ -646,6 +653,8 @@ See also `org-save-all-org-buffers'"
 (use-package org-inline-pdf)
 (add-hook 'org-mode-hook #'org-inline-pdf-mode)
 
+(use-package org-noter)
+
 ;; Journaling
 (use-package org-journal
 :ensure t
@@ -655,7 +664,8 @@ See also `org-save-all-org-buffers'"
   :config
   (setq org-journal-dir "~/Documents/org/journal/"
         org-journal-date-format "%A, %d %B %Y"
-	org-journal-file-type 'weekly))
+	org-journal-file-type 'weekly
+	org-journal-enable-encryption t))
 
 ;; Disable evil in emacs calendar so org-journal keybindings work.
 (evil-set-initial-state 'calendar-mode 'emacs)
