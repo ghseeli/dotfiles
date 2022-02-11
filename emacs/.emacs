@@ -137,6 +137,8 @@
 (use-package magit)
 
 ;;(use-package evil-magit)
+(use-package evil-collection)
+(evil-collection-init 'magit)
 
 (use-package diff-hl)
 (global-diff-hl-mode)
