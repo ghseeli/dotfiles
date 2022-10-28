@@ -34,7 +34,10 @@
 (load custom-file)
 
 (require 'org-crypt)
+(require 'epa-file)
+(epa-file-enable)
 (org-crypt-use-before-save-magic)
+(setq epa-pinentry-mode 'loopback)
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
 ;; GPG key to use for encryption
 ;; Either the Key ID or set to nil to use symmetric encryption.
@@ -94,8 +97,19 @@
 
  (setq ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
 
+;; git support
+(use-package magit)
+
+
+(use-package diff-hl)
+(global-diff-hl-mode)
+
 
 ;; evil
+
+(setq evil-want-keybinding nil)
+(setq evil-want-C-i-jump nil)
+
 (use-package evil
   :config
   (setq evil-want-visual-char-semi-exclusive t)
@@ -103,6 +117,10 @@
   (evil-mode 1))
 
 (use-package evil-smartparens)
+
+;;(use-package evil-magit)
+(use-package evil-collection)
+(evil-collection-init 'magit)
 
 (use-package evil-org
     :ensure t
@@ -133,15 +151,6 @@
   :config
   (add-hook 'LaTeX-mode-hook 'langtool-ignore-fonts-minor-mode))
 
-;; git support
-(use-package magit)
-
-;;(use-package evil-magit)
-(use-package evil-collection)
-(evil-collection-init 'magit)
-
-(use-package diff-hl)
-(global-diff-hl-mode)
 
 (use-package key-chord
   :config
@@ -250,9 +259,10 @@
 (add-to-list 'flycheck-checkers 'textlint)
 
 ;; color themes
-;; (use-package sublime-themes
-;;  :init (progn (load-theme 'spolsky t)))
-
+ ;; (use-package sublime-themes
+ ;;  :init (progn (load-theme 'mccarthy t)))
+(use-package solarized-theme
+  :init (progn (load-theme 'solarized-light t)))
 
 ; yasnippet for better LaTeX macro-ing
 (add-to-list 'load-path
@@ -282,6 +292,11 @@
     :substitutions
     '(("__QUIZNUM__" . (lambda () (read-string "Quiz Number: "))))
     )
+  (skeletor-define-template "learn-alco-talk-skeleton"
+    :title "learn-alco-talk-skeleton"
+    :substitutions
+    '(("__TALKDATE__" . (lambda () (read-string "Date of Talk (YYYY-MM-dd): "))) ("__SPEAKERFIRSTNAME__" . (lambda () (read-string "Speaker First Name: "))) ("__SPEAKERLASTNAME__" . (lambda () (read-string "Speaker Last Name: "))) ("__TALKTITLE__" . (lambda () (read-string "Talk Title: "))) ("__ABSTRACT__" . (lambda () (read-string "Talk Abstract: "))))
+    :no-license? t)
   
     ;; '(("__DESCRIPTION__" . (lambda () (read-string "Description: "))))
     ;; :substitutions
@@ -293,7 +308,11 @@
 
 (use-package sage-shell-mode
     :init
-    (setq sage-shell:sage-executable "~/sage"))
+    (setq sage-shell:sage-executable "~/dotfiles/emacs/run_sage_docker.sh")
+    (setq sage-shell:use-prompt-toolkit nil) ;; dangerous but trying to get docker to work
+    (setq sage-shell:use-simple-prompt t)
+    (setq sage-shell:set-ipython-version-on-startup nil)
+    (setq sage-shell:check-ipython-version-on-startup nil))
 
 (defun send-to-sage-and-switch ()
     "Send buffer to sage and switch to sage buffer."
@@ -310,6 +329,8 @@
 (my-leader-def 'sage-shell:sage-mode-map
     "c" 'sage-shell-edit:send-buffer)
 
+(setq sage-shell:input-history-cache-file "~/.emacs.d/.sage_shell_input_history")
+
 (general-define-key
  :states '(normal emacs)
  :keymaps '(sage-shell-mode-map)
@@ -321,6 +342,13 @@
 ;; Ob-sagemath supports only evaluating with a session.
 (setq org-babel-default-header-args:sage '((:session . t)
                                            (:results . "output")))
+
+(use-package ob-async)
+(add-hook 'ob-async-pre-execute-src-block-hook
+        '(lambda ()
+	   (setq sage-shell:sage-executable "~/sage")
+           ))
+
 
 (setq org-src-fontify-natively t)
 
@@ -466,6 +494,7 @@
   "i" 'yas-insert-snippet
   "j j" 'avy-goto-char
   "j l" 'avy-goto-line
+  "SPC" 'avy-goto-char
   "w w" 'ace-window
   "w s" 'ace-swap-window
   "w h" 'evil-window-left
@@ -667,7 +696,8 @@ See also `org-save-all-org-buffers'"
   (setq org-journal-dir "~/Documents/org/journal/"
         org-journal-date-format "%A, %d %B %Y"
 	org-journal-file-type 'weekly
-	org-journal-enable-encryption t))
+;;	org-journal-enable-encryption t
+	))
 
 ;; Disable evil in emacs calendar so org-journal keybindings work.
 (evil-set-initial-state 'calendar-mode 'emacs)
@@ -706,12 +736,35 @@ See also `org-save-all-org-buffers'"
 
 ; (use-package org-ref)
 
-(setq bibtex-completion-bibliography '("~/Documents/org/research_bibliography.bib" "~/Documents/org/other.bib"))
+(setq bibtex-completion-bibliography '("~/Documents/org/Research.bib" "~/Documents/org/other.bib"))
 (setq bibtex-completion-library-path '("~/Dropbox (University of Michigan)/pdfs"))
-(setq bibtex-completion-notes-path "~/Documents/org")
+(setq bibtex-completion-notes-path  "~/Dropbox (University of Michigan)/pdfs")
 (use-package ebib)
 
-(setq org-cite-global-bibliography '("~/Documents/org/research_bibliography.bib" "~/Documents/org/other.bib"))
+(setq org-cite-global-bibliography '("~/Documents/org/Research.bib" "~/Documents/org/other.bib"))
+(require 'oc-basic)
+(require 'oc-csl)
+(require 'oc-natbib)
+
+;; (setq org-preview-latex-default-process 'dvisvgm)
+(add-to-list 'org-latex-packages-alist
+             '("" "tikz" t))
+
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t))
+
+;; (setq org-latex-create-formula-image-program 'imagemagick)
+
+(use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(use-package org-download
+  :config
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  (setq org-download-method 'download)
+  (setq-default org-download-image-dir "./img")
+  )
 
 ;; compatibility with ivy-bibtex
 ;; (require 'org-ref-ivy)
@@ -721,6 +774,10 @@ See also `org-save-all-org-buffers'"
 ;;       org-ref-insert-label-function 'org-ref-insert-label-link
 ;;       org-ref-insert-ref-function 'org-ref-insert-ref-link
 ;;       org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body)))
+
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes '("letter" "\\documentclass{letter}"))
+  )
 
 ;;
 (provide '.emacs)

@@ -109,9 +109,11 @@
 #+LaTeX_HEADER: \newcommand{\epsbold}{{\boldsymbol \varepsilon }}
 #+LaTeX_HEADER: \newcommand{\Acal}{{\mathcal A}}
 #+LaTeX_HEADER: \newcommand{\Ecal}{{\mathcal E}}
+#+latex_header: \newcommand{\Fcal}{\mathcal{F}}
 #+LaTeX_HEADER: \newcommand{\Gcal}{{\mathcal G}}
 #+LaTeX_HEADER: \newcommand{\Hcal}{{\mathcal H}}
 #+LaTeX_HEADER: \newcommand{\Lcal}{{\mathcal L}}
+#+latex_header: \newcommand{\Ocal}{\mathcal{O}}
 #+LaTeX_HEADER: \newcommand{\Scal}{{\mathcal S}}
 #+LaTeX_HEADER: \newcommand{\ctild}{\tilde{c}}
 #+LaTeX_HEADER: \newcommand{\Htild}{\tilde{H}}
@@ -133,3 +135,31 @@
 #+LaTeX_HEADER: \DeclareMathOperator{\SSYT}{SSYT}
 #+LaTeX_HEADER: \DeclareMathOperator{\LNDP}{LNDP}
 #+LaTeX_HEADER: \DeclareMathOperator{\diag}{diag}
+#+LaTeX_HEADER: \newcommand{\covers}{\gtrdot}
+#+LaTeX_HEADER: \newcommand{\coveredby}{\ltrdot}
+
+#+LaTeX_HEADER: \usepackage{amsthm}
+#+LaTeX_HEADER: \newtheorem{thm}{Theorem}
+#+LaTeX_HEADER: \newtheorem*{thm*}{Theorem}
+#+LaTeX_HEADER: \newtheorem{lem}[thm]{Lemma}
+#+LaTeX_HEADER: \newtheorem*{lem*}{Lemma}
+#+LaTeX_HEADER: \newtheorem{prop}[thm]{Proposition}
+#+LaTeX_HEADER: \newtheorem*{prop*}{Proposition}
+#+LaTeX_HEADER: \newtheorem{cor}[thm]{Corollary}
+#+LaTeX_HEADER: \newtheorem*{cor*}{Corollary}
+#+LaTeX_HEADER: \newtheorem{conj}[thm]{Conjecture}
+#+LaTeX_HEADER: \newtheorem*{conj*}{Conjecture}
+#+LaTeX_HEADER: \theoremstyle{definition}
+#+LaTeX_HEADER: \newtheorem{defn}[thm]{Definition}
+#+LaTeX_HEADER: \newtheorem{definition}[thm]{Definition}
+#+LaTeX_HEADER: \newtheorem*{defn*}{Definition}
+#+LaTeX_HEADER: \newtheorem{example}[thm]{Example}
+#+LaTeX_HEADER: \newtheorem*{example*}{Example}
+#+LaTeX_HEADER: \newtheorem{exmp}[thm]{Example}
+#+LaTeX_HEADER: \newtheorem*{exmp*}{Example}
+#+LaTeX_HEADER: \newtheorem{examples}[thm]{Examples}
+#+LaTeX_HEADER: \newtheorem*{examples*}{Examples}
+#+LaTeX_HEADER: \newtheorem{alg}[thm]{Algorithm}
+#+LaTeX_HEADER: \newtheorem*{alg*}{Algorithm}
+#+LaTeX_HEADER: \newtheorem{rmk}[thm]{Remark}
+#+LaTeX_HEADER: \newtheorem*{rmk*}{Remark}
