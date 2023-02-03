@@ -116,6 +116,10 @@
   (setq evil-want-fine-undo t)
   (evil-mode 1))
 
+;;Disable evil in term mode since it behaves oddly
+;;Recommended to enable vi-mode in bashrc or zshrc instead
+(evil-set-initial-state 'term-mode 'emacs)
+
 (use-package evil-smartparens)
 
 ;;(use-package evil-magit)
@@ -306,13 +310,16 @@
 
 (use-package python-docstring)
 
+(use-package docker-tramp)
+
 (use-package sage-shell-mode
     :init
-    (setq sage-shell:sage-executable "~/dotfiles/emacs/run_sage_docker.sh")
-    (setq sage-shell:use-prompt-toolkit nil) ;; dangerous but trying to get docker to work
-    (setq sage-shell:use-simple-prompt t)
-    (setq sage-shell:set-ipython-version-on-startup nil)
-    (setq sage-shell:check-ipython-version-on-startup nil))
+    (setq sage-shell:sage-executable "~/SageMath/sage"))
+    ;; (setq sage-shell:sage-executable "~/dotfiles/emacs/run_sage_docker.sh")
+    ;; (setq sage-shell:use-prompt-toolkit nil) ;; dangerous but trying to get docker to work
+    ;; (setq sage-shell:use-simple-prompt t)
+    ;; (setq sage-shell:set-ipython-version-on-startup nil)
+    ;; (setq sage-shell:check-ipython-version-on-startup nil))
 
 (defun send-to-sage-and-switch ()
     "Send buffer to sage and switch to sage buffer."
