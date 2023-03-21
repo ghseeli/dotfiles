@@ -4,6 +4,7 @@
 (set-keyboard-coding-system nil)
 ; (global-linum-mode t)
 (setq column-number-mode t)
+(setq tool-bar-mode -1)
 
 (setq inhibit-startup-screen t)
 (setq package-check-signature nil)
@@ -197,7 +198,18 @@
 	(let ((fname (read-string "Command: ")))
 	  (cons (format "\\%s{" (or fname "")) "}")))
       (embrace-add-pair-regexp ?c "\\(\\w\\|\\s_\\)+?(" ")" 'embrace-with-command
-                           (embrace-build-help "\command{" "}")))))
+                               (embrace-build-help "\command{" "}"))))
+  (add-hook 'org-mode-hook
+	    (lambda ()
+	      (embrace-add-pair ?m "\\(" "\\)")
+	      (embrace-add-pair ?a "\\begin{align*}" "\\end{align*}")
+	      (embrace-add-pair ?E "\\begin{equation}" "\\end{equation}")
+	      (defun embrace-with-command ()
+		(let ((fname (read-string "Command: ")))
+		  (cons (format "\\%s{" (or fname "")) "}")))
+	      ))
+  )
+
 
 
 (use-package evil-embrace
@@ -598,6 +610,15 @@
   "r l" 'my-label-ref
   )
 
+;; Haskell
+
+(use-package haskell-mode)
+(setq haskell-process-type 'stack-ghci)
+(setq haskell-process-path-ghci "stack")
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((haskell . t)))
 ;; org-mode
 
 (setq org-directory "~/Documents/org")

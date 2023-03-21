@@ -23,3 +23,6 @@ add2path ~/.gem/ruby/2.0.0/bin
 # MySQL
 add2path /usr/local/mysql/bin
 
+# Haskell
+add2path ~/haskell
+
