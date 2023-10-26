@@ -88,7 +88,7 @@
   :init
   (setq aw-dispatch-always t))
 
-(use-package gscholar-bibtex)
+;; (use-package gscholar-bibtex)
 
 (use-package ivy-bibtex
    :config
@@ -381,6 +381,9 @@
 ;; Do not evaluate code blocks when exporting.
 (setq org-export-babel-evaluate nil)
 
+;; Let me specify indentation I want in source blocks.
+(setq org-src-preserve-indentation t)
+
 ;; Show images when opening a file.
 (setq org-startup-with-inline-images t)
 
@@ -415,6 +418,7 @@
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook (lambda () (electric-pair-local-mode 'toggle)))
 )
 
 
@@ -619,6 +623,7 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((haskell . t)))
+
 ;; org-mode
 
 (setq org-directory "~/Documents/org")
@@ -743,7 +748,8 @@ See also `org-save-all-org-buffers'"
   :config
   (org-roam-db-autosync-enable)
   )
-  
+
+(require 'org-roam-export)
 (setq org-roam-capture-templates '(("d" "default" plain "%?"
     :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
 		       "#+SETUPFILE: ~/dotfiles/emacs/tex_style.org\n#+title: ${title}\n#+STARTUP: latexpreview\n#+STARTUP: overview\n"

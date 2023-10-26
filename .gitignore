@@ -3,10 +3,26 @@
 # swap
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]
+
 # session
 Session.vim
+
 # temporary
 .netrwhist
 *~
+
 # auto-generated tag files
 tags
+
+# autoload
+.vim/autoload/
+
+## MacOS
+.DS_Store
+
+## Emacs
+# Autogen files
+*.~undo-tree~
+.#*
+/#*
+auto/*
