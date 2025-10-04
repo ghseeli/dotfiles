@@ -6,3 +6,5 @@
     fetchJobs = 4
 
 
+[credential]
+	helper = store

@@ -103,13 +103,16 @@
 #+LaTeX_HEADER: \newcommand{\alphabold}{{\boldsymbol \alpha }}
 #+LaTeX_HEADER: \newcommand{\betabold}{{\boldsymbol \beta }}
 #+LaTeX_HEADER: \newcommand{\gammabold}{{\boldsymbol \gamma }}
+#+LaTeX_HEADER: \newcommand{\lambdabold}{{\boldsymbol \lambda }}
+#+LaTeX_HEADER: \newcommand{\mubold}{{\boldsymbol \mu }}
 #+LaTeX_HEADER: \newcommand{\nubold}{{\boldsymbol \nu }}
 #+LaTeX_HEADER: \newcommand{\onebold}{{\boldsymbol 1}}
 #+LaTeX_HEADER: \newcommand{\deltabold}{{\boldsymbol \delta }}
 #+LaTeX_HEADER: \newcommand{\epsbold}{{\boldsymbol \varepsilon }}
 #+LaTeX_HEADER: \newcommand{\Acal}{{\mathcal A}}
+#+LaTeX_HEADER: \newcommand{\Dcal}{{\mathcal D}}
 #+LaTeX_HEADER: \newcommand{\Ecal}{{\mathcal E}}
-#+latex_header: \newcommand{\Fcal}{\mathcal{F}}
+#+LaTeX_header: \newcommand{\Fcal}{\mathcal{F}}
 #+LaTeX_HEADER: \newcommand{\Gcal}{{\mathcal G}}
 #+LaTeX_HEADER: \newcommand{\Hcal}{{\mathcal H}}
 #+LaTeX_HEADER: \newcommand{\Lcal}{{\mathcal L}}

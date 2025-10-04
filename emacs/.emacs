@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; package --- summary:
 ;;; Commentary:
 ;;; Code:
@@ -17,6 +18,7 @@
 (setq vc-make-backup-files t)
 (require 'package)
 (setq package-enable-at-startup nil)
+(setq package-archives '())
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
@@ -30,6 +32,9 @@
 
 ; Download packages if they are missing.
 (setq use-package-always-ensure t)
+;Enable installing from git
+(use-package quelpa)
+(use-package quelpa-use-package)
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -44,11 +49,11 @@
 ;; Either the Key ID or set to nil to use symmetric encryption.
 (setq org-crypt-key nil)
 
-(use-package linum-relative)
+;; (use-package linum-relative)
 
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+ (exec-path-from-shell-initialize))
 
 (use-package smartparens-config
 	     :ensure smartparens
@@ -157,14 +162,6 @@
   (add-hook 'LaTeX-mode-hook 'langtool-ignore-fonts-minor-mode))
 
 
-(use-package key-chord
-  :config
-  (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state)
-  (key-chord-define evil-replace-state-map  "jk" 'evil-normal-state)
-  (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state)
-  (key-chord-define evil-insert-state-map  "jj" "\\")
-)
 
 
 (use-package paredit)
@@ -322,11 +319,12 @@
 
 (use-package python-docstring)
 
-(use-package docker-tramp)
+;; (use-package docker-tramp)
 
 (use-package sage-shell-mode
     :init
-    (setq sage-shell:sage-executable "~/SageMath/sage"))
+    (setq sage-shell:sage-executable "sage"))
+    ;; (setq sage-shell:sage-executable "~/SageMath/sage"))
     ;; (setq sage-shell:sage-executable "~/dotfiles/emacs/run_sage_docker.sh")
     ;; (setq sage-shell:use-prompt-toolkit nil) ;; dangerous but trying to get docker to work
     ;; (setq sage-shell:use-simple-prompt t)
@@ -506,7 +504,7 @@
   "b b" 'switch-to-buffer
   "b o" 'switch-to-buffer-other-window
   "b k" 'kill-current-buffer
-  "b l" 'linum-relative-mode
+  ;; "b l" 'linum-relative-mode
   "f s" 'save-buffer
   "f S" 'write-file
   "f f" 'find-file
@@ -623,6 +621,49 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((haskell . t)))
+
+;;Lean 
+(use-package dash)
+(use-package lsp-mode)
+(use-package lsp-ui)
+(setq lsp-ui-doc-show-with-cursor 't)
+(setq lsp-ui-doc-position 'at-point)
+(setq lsp-ui-doc-delay 0)
+(use-package magit-section)
+
+(add-to-list 'load-path "~/.emacs.d/lean4-mode")
+(require 'lean4-mode)
+
+(my-leader-def 'lean4-mode-map
+  "?" 'lsp-ui-doc-mode
+  )
+
+
+;;(require 'cl)
+(defun quail-jk (key idx) 
+  (let ((curpos (point)))
+        (quail-delete-region)
+        (evil-normal-state)
+        (print curpos)
+	(run-at-time 0.002 nil (lambda () (goto-char (- curpos 2))))
+	(throw 'quail-tag nil))
+  )
+
+(add-hook 'lean4-mode-hook (lambda () (quail-define-rules 
+			     ("jk" quail-jk))))
+
+(use-package key-chord
+  :config
+  (key-chord-mode 1)
+  (key-chord-define evil-insert-state-map  "jk" 'evil-normal-state)
+  (key-chord-define evil-replace-state-map  "jk" 'evil-normal-state)
+  (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state)
+  (key-chord-define evil-insert-state-map  "jj" "\\")
+)
+
+;; (quelpa '(lean4-mode :repo "leanprover-community/lean4-mode" :fetcher github))
+;; (use-package lean4-mode
+;;   :quelpa (lean4-mode :fetcher github :repo "leanprover-community/lean4-mode"))
 
 ;; org-mode
 
