@@ -274,12 +274,18 @@
 ;; color themes
  ;; (use-package sublime-themes
  ;;  :init (progn (load-theme 'mccarthy t)))
+;; (use-package sublime-themes
+;;        :init (progn (load-theme 'spolsky t)))
+;; (use-package solarized-theme
+;;   :init (progn (load-theme 'solarized-light t)))
 (use-package solarized-theme
-  :init (progn (load-theme 'solarized-light t)))
+  :init (progn (load-theme 'solarized-dark t)))
+
 
 ; yasnippet for better LaTeX macro-ing
 (add-to-list 'load-path
-	     "~/.emacs/yasnippet")
+	     "~/.emacs.d/yasnippet")
+
 (use-package yasnippet
   :ensure t
   :diminish yasnippet-mode
@@ -624,8 +630,22 @@
 
 ;;Lean 
 (use-package dash)
-(use-package lsp-mode)
+(use-package lsp-mode
+  :after company
+  :custom
+  (setq lsp-inlay-hint-enable nil)
+  (setq lsp-completion-provider t))
+
 (use-package lsp-ui)
+
+(use-package company
+  :custom
+  (setq company-idle-delay 0)
+  (add-to-list 'company-backends 'company-elisp)
+  (global-company-mode))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 (setq lsp-ui-doc-show-with-cursor 't)
 (setq lsp-ui-doc-position 'at-point)
 (setq lsp-ui-doc-delay 0)
@@ -645,12 +665,14 @@
         (quail-delete-region)
         (evil-normal-state)
         (print curpos)
-	(run-at-time 0.002 nil (lambda () (goto-char (- curpos 2))))
+	(run-at-time 0.002 nil (lambda () (goto-char (- curpos 2)))) ;; TODO unless you are at the beginning of a line
 	(throw 'quail-tag nil))
   )
 
-(add-hook 'lean4-mode-hook (lambda () (quail-define-rules 
-			     ("jk" quail-jk))))
+(add-hook 'lean4-mode-hook (lambda ()
+			     (setq lsp-inlay-hint-enable nil)
+			     (quail-define-rules ((append . t)) ("jk" quail-jk))))
+
 
 (use-package key-chord
   :config
