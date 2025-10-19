@@ -628,7 +628,7 @@
  'org-babel-load-languages
  '((haskell . t)))
 
-;;Lean 
+;; Lean 
 (use-package dash)
 (use-package lsp-mode
   :after company
@@ -654,18 +654,12 @@
 (add-to-list 'load-path "~/.emacs.d/lean4-mode")
 (require 'lean4-mode)
 
-(my-leader-def 'lean4-mode-map
-  "?" 'lsp-ui-doc-mode
-  )
-
-
-;;(require 'cl)
 (defun quail-jk (key idx) 
   (let ((curpos (point)))
         (quail-delete-region)
         (evil-normal-state)
         (print curpos)
-	(run-at-time 0.002 nil (lambda () (goto-char (- curpos 2)))) ;; TODO unless you are at the beginning of a line
+	(run-at-time 0.0002 nil (lambda () (goto-char (- curpos (if (bolp) 1 2)))))
 	(throw 'quail-tag nil))
   )
 
@@ -673,6 +667,12 @@
 			     (setq lsp-inlay-hint-enable nil)
 			     (quail-define-rules ((append . t)) ("jk" quail-jk))))
 
+(my-leader-def 'lean4-mode-map
+  "l l" 'lean4-toggle-info
+;;  "l y" 'lsp-copy-hover
+  "l r" 'lsp-ui-peek-find-references
+  "?" 'lsp-ui-doc-mode
+  )
 
 (use-package key-chord
   :config
@@ -682,10 +682,6 @@
   (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state)
   (key-chord-define evil-insert-state-map  "jj" "\\")
 )
-
-;; (quelpa '(lean4-mode :repo "leanprover-community/lean4-mode" :fetcher github))
-;; (use-package lean4-mode
-;;   :quelpa (lean4-mode :fetcher github :repo "leanprover-community/lean4-mode"))
 
 ;; org-mode
 
