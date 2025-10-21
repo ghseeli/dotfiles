@@ -510,7 +510,7 @@
   "b b" 'switch-to-buffer
   "b o" 'switch-to-buffer-other-window
   "b k" 'kill-current-buffer
-  ;; "b l" 'linum-relative-mode
+  "b l" 'display-line-number-mode
   "f s" 'save-buffer
   "f S" 'write-file
   "f f" 'find-file
