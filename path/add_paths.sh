@@ -6,7 +6,7 @@ add2path() {
 add2path /usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
 
 # Heroku
-add2path /usr/local/heroku/bin
+#add2path /usr/local/heroku/bin
 
 # TeX (OSX)
 # add2path /Library/TeX/texbin

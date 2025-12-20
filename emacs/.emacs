@@ -19,11 +19,11 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '())
-(add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives
-	     '("gnu" . "https://elpa.gnu.org/packages/"))
-(package-initialize)
+;; (add-to-list 'package-archives
+;; 	     '("melpa" . "https://melpa.org/packages/"))
+;; (add-to-list 'package-archives
+;; 	     '("gnu" . "https://elpa.gnu.org/packages/"))
+;; (package-initialize)
 ;; (package-refresh-contents)
 
 ;; Use-package to replace require
@@ -35,6 +35,7 @@
 ;Enable installing from git
 (use-package quelpa)
 (use-package quelpa-use-package)
+
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -161,23 +162,27 @@
   :config
   (add-hook 'LaTeX-mode-hook 'langtool-ignore-fonts-minor-mode))
 
-
-
-
 (use-package paredit)
 
 (use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1)
-(evil-add-to-alist
- 'evil-surround-pairs-alist
- ?\( '("(" . ")")
- ?\[ '("[" . "]")
- ?\{ '("{" . "}")
- ?\) '("( " . " )")
- ?\] '("[ " . " ]")
- ?\} '("{ " . " }")))
+     :ensure t
+     :config
+     (global-evil-surround-mode 1)
+    (setq-default evil-surround-pairs-alist
+        '((?( . ("(" . ")"))
+        (?[ . ("[" . "]"))
+        (?{ . ("{" . "}"))
+        (?) . ("(" . ")"))
+        (?] . ("[" . "]"))
+        (?} . ("{" . "}"))
+        (?# . ("#{" . "}"))
+        (?b . ("(" . ")"))
+        (?B . ("{" . "}"))
+        (?> . ("<" . ">"))
+        (?t . evil-surround-read-tag)
+        (?< . evil-surround-read-tag)
+        (?\C-f . evil-surround-prefix-function)
+        (?f . evil-surround-function))))
 
 (use-package embrace
   :ensure t
@@ -510,7 +515,7 @@
   "b b" 'switch-to-buffer
   "b o" 'switch-to-buffer-other-window
   "b k" 'kill-current-buffer
-  "b l" 'display-line-number-mode
+  "b l" 'display-line-numbers-mode
   "f s" 'save-buffer
   "f S" 'write-file
   "f f" 'find-file
@@ -521,6 +526,10 @@
   "i" 'yas-insert-snippet
   "j j" 'avy-goto-char
   "j l" 'avy-goto-line
+  "s f" 'sp-slurp-hybrid-sexp
+  "s b" 'sp-forward-barf-sexp
+  "s F" 'sp-backward-slurp-sexp
+  "s B" 'sp-backward-barf-sexp
   "SPC" 'avy-goto-char
   "w w" 'ace-window
   "w s" 'ace-swap-window
@@ -630,11 +639,15 @@
 
 ;; Lean 
 (use-package dash)
+
 (use-package lsp-mode
   :after company
   :custom
-  (setq lsp-inlay-hint-enable nil)
-  (setq lsp-completion-provider t))
+    (lsp-inlay-hint-enable nil)
+    (lsp-completion-provider t)
+    :config
+    (add-to-list 'warning-suppress-log-types '(lsp-mode))
+    (add-to-list 'warning-suppress-types '(lsp-mode)))
 
 (use-package lsp-ui)
 
@@ -682,6 +695,12 @@
   (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state)
   (key-chord-define evil-insert-state-map  "jj" "\\")
 )
+;; Copilot
+
+(use-package copilot
+  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+            :rev :newest
+            :branch "main"))
 
 ;; org-mode
 
