@@ -4,6 +4,25 @@
 ;;; Code:
 (set-keyboard-coding-system nil)
 ; (global-linum-mode t)
+
+;;; ============================================================================
+;;; EMACS CORE PERFORMANCE SETTINGS
+;;; ============================================================================
+
+;; Increase garbage collection threshold dramatically (default is ~800KB)
+;; Set to 100MB during normal operation, 1GB during startup
+(setq gc-cons-threshold 100000000) ; 100MB
+(setq gc-cons-percentage 0.6)
+
+;; Increase during startup, then reset
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold 100000000
+                  gc-cons-percentage 0.6)))
+
+;; Increase the amount of data Emacs reads from processes
+(setq read-process-output-max (* 1024 1024 4)) ; 4MB (default is 4KB)
+
 (setq column-number-mode t)
 (setq tool-bar-mode -1)
 
@@ -433,40 +452,48 @@
   (add-hook 'LaTeX-mode-hook (lambda () (electric-pair-local-mode 'toggle)))
 )
 
+(use-package doom-modeline
+:ensure t
+:init (doom-modeline-mode 1)
+:config
+(setq doom-modeline-height 25)      ; Set height
+(setq doom-modeline-bar-width 3)   ; Thickness of the left bar
+(setq doom-modeline-icon t)        ; Display icons
+(setq doom-modeline-major-mode-icon t))
 
 
 ;; LaTeX ; eventually should be moved to seperate file.
 ;;(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 ;; (add-hook 'LaTeX-mode-hook 'turn-on-smartparens-strict-mode)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(magit-remote-arguments nil)
- '(magit-subtree-arguments nil)
- '(package-selected-packages
-   '(tiny org-inline-pdf undo-tree ebib org-ref simple-httpd websocket org-fragtog org wikinforg xmind-org org-roam diminish smart-mode-line rich-minority org-journal evil-org pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))
- '(sage-shell:use-prompt-toolkit nil)
- '(sage-shell:use-simple-prompt t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(magit-remote-arguments nil)
+;;  '(magit-subtree-arguments nil)
+;;  '(package-selected-packages
+;;    '(tiny org-inline-pdf undo-tree ebib org-ref simple-httpd websocket org-fragtog org wikinforg xmind-org org-roam diminish smart-mode-line rich-minority org-journal evil-org pdf-tools disable-mouse general python-docstring auctex magit smex smartparens use-package))
+;;  '(sage-shell:use-prompt-toolkit nil)
+;;  '(sage-shell:use-simple-prompt t))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:background nil)))))
 
- ;; Compile LaTeX with latexmk and put outputs into ./out folder.
-;; (add-hook 'LaTeX-mode-hook (lambda ()
-;;                  (push
-;;                   '("Make" "latexmk -pdf -interaction=nonstopmode -pv -outdir=./out %t" TeX-run-TeX nil t
-;;                 :help "Make pdf output using latexmk.")
-;;                   TeX-command-list)))
-;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
-(add-hook 'LaTeX-mode-hook (lambda () (setq font-lock-maximum-decoration 200)))
-;; test getting to compile on arm Mac
-;; (setenv "CPATH" "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include")
-;; (setenv "PKG_CONFIG_PATH" "/opt/homebrew/Library/Homebrew/os/mac/pkgconfig/11.1")
+;;  ;; Compile LaTeX with latexmk and put outputs into ./out folder.
+;; ;; (add-hook 'LaTeX-mode-hook (lambda ()
+;; ;;                  (push
+;; ;;                   '("Make" "latexmk -pdf -interaction=nonstopmode -pv -outdir=./out %t" TeX-run-TeX nil t
+;; ;;                 :help "Make pdf output using latexmk.")
+;; ;;                   TeX-command-list)))
+;; ;; (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "Make")))
+;; (add-hook 'LaTeX-mode-hook (lambda () (setq font-lock-maximum-decoration 200)))
+;; ;; test getting to compile on arm Mac
+;; ;; (setenv "CPATH" "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include")
+;; ;; (setenv "PKG_CONFIG_PATH" "/opt/homebrew/Library/Homebrew/os/mac/pkgconfig/11.1")
 (use-package pdf-tools
   :config
   (pdf-tools-install)
@@ -647,12 +674,46 @@
   :after company
   :custom
     (lsp-inlay-hint-enable nil)
-    (lsp-completion-provider t)
+    (lsp-completion-provider :none)
     :config
     (add-to-list 'warning-suppress-log-types '(lsp-mode))
     (add-to-list 'warning-suppress-types '(lsp-mode)))
 
 (use-package lsp-ui)
+
+(setq lsp-semantic-tokens-enable nil)
+
+;; lsp booster to make lsp faster
+(defun lsp-booster--advice-json-parse (old-fn &rest args)
+  "Try to parse bytecode instead of json."
+  (or
+   (when (equal (following-char) ?#)
+     (let ((bytecode (read (current-buffer))))
+       (when (byte-code-function-p bytecode)
+         (funcall bytecode))))
+   (apply old-fn args)))
+(advice-add (if (progn (require 'json)
+                       (fboundp 'json-parse-buffer))
+                'json-parse-buffer
+              'json-read)
+            :around
+            #'lsp-booster--advice-json-parse)
+
+(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  "Prepend emacs-lsp-booster command to lsp CMD."
+  (let ((orig-result (funcall old-fn cmd test?)))
+    (if (and (not test?)                             ;; for check lsp-server-present?
+             (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+             lsp-use-plists
+             (not (functionp 'json-rpc-connection))  ;; native json-rpc
+             (executable-find "emacs-lsp-booster"))
+        (progn
+          (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+            (setcar orig-result command-from-exec-path))
+          (message "Using emacs-lsp-booster for %s!" orig-result)
+          (cons "emacs-lsp-booster" orig-result))
+      orig-result)))
+(advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 
 (use-package company
   :custom
@@ -670,6 +731,98 @@
 (add-to-list 'load-path "~/.emacs.d/lean4-mode")
 (require 'lean4-mode)
 
+;; Code to give Lean more RAM and CPUs, courtesy of @cjrl.
+
+(with-eval-after-load 'lean4-mode
+  (setq lean4-memory-limit 24000) 
+  (defun lean4--server-cmd ()
+    "Return Lean server command with memory and thread limits."
+    (condition-case nil
+        (if (string-version-lessp 
+             (car (process-lines (lean4-get-executable "lake") "--version")) 
+             "3.1.0")
+            ;; Old lake or no lake: use lean --server directly
+            `(,(lean4-get-executable lean4-executable-name) 
+              "--server" 
+              "-M" ,(number-to-string lean4-memory-limit)
+              "-j" "12")
+          ;; New lake: use lake serve with -- to pass args to lean server
+          `(,(lean4-get-executable "lake") 
+            "serve" 
+            "--"
+            "-M" ,(number-to-string lean4-memory-limit)
+            "-j" "12"))
+      (error `(,(lean4-get-executable lean4-executable-name) 
+               "--server" 
+               "-M" ,(number-to-string lean4-memory-limit)
+               "-j" "12")))))
+
+(require 'json)
+
+ (setq my-lean-symbols
+	(let ((json-file-path (expand-file-name "lean-symbols.json" user-emacs-directory)))
+	  (when (file-exists-p json-file-path)
+	    (with-temp-buffer
+	      (insert-file-contents json-file-path)
+	      (goto-char (point-min))
+	      ;; In json-parse-buffer, 'alist' usually forces keys to symbols.
+	      ;; We'll parse it and then ensure keys are strings if they aren't already.
+	      (let ((raw-data (json-parse-buffer :object-type 'alist)))
+		(mapcar (lambda (pair)
+			  (cons (format "%s" (car pair)) (cdr pair)))
+			raw-data))))))
+
+   (defun company-my-lean-symbols (command &optional arg &rest _ignored)
+   (interactive (list 'interactive))
+   (cl-case command
+	(interactive (company-begin-backend 'company-my-lean-symbols))
+	;; 1. Grab everything including the backslash
+	(prefix (company-grab-symbol-cons "[^[:space:]]+" 0))
+	(candidates
+	(let ((query (string-remove-prefix "\\" arg)))
+	(cl-loop for (trigger . symbol) in my-lean-symbols
+		    if (string-prefix-p query trigger)
+		    collect trigger)))
+	(annotation
+	(concat " " (cdr (assoc arg my-lean-symbols))))
+	(post-completion
+	(let ((symbol (cdr (assoc arg my-lean-symbols))))
+	(when symbol
+	    ;; 2. Logic to "gobble" the backslash if it exists
+	    (let* ((end (point))
+		    (start (- end (length arg)))
+		    ;; Check if the character right before our match is a backslash
+		    (maybe-backslash (char-before start)))
+	    (if (eq maybe-backslash ?\\)
+		(delete-region (1- start) end)
+		(delete-region start end))
+	    (insert symbol)))))))
+
+;;(use-package company-math)
+(add-hook 'lean4-mode-hook
+	  (lambda ()
+	    (setq-local company-backends 
+		'(;;company-math-symbols-unicode
+		    company-my-lean-symbols
+                    company-keywords
+		    (
+		    company-dabbrev 
+		    ;; company-dabbrev-code 
+		    ;; company-files 
+		    company-capf 
+		    ;; company-semantic
+		    ;; company-clang
+		    )))))
+
+;; (add-hook 'lean4-mode-hook (lambda () (
+;; (setq-local company-backends 
+;;             '(
+;;            ;; company-math-symbols-unicode  
+;;             company-keywords         
+;;             (company-capf company-dabbrev)))
+;; )))
+;; (add-to-list 'company-backends 'company-math-symbols-unicode)
+
 (defun quail-jk (key idx) 
   (let ((curpos (point)))
         (quail-delete-region)
@@ -679,9 +832,35 @@
 	(throw 'quail-tag nil))
   )
 
-(add-hook 'lean4-mode-hook (lambda ()
-			     (setq lsp-inlay-hint-enable nil)
-			     (quail-define-rules ((append . t)) ("jk" quail-jk))))
+;; (add-hook 'lean4-mode-hook (lambda ()
+;; 			     (setq lsp-inlay-hint-enable nil)
+;; 			     (quail-define-rules ((append . t)) ("jk" quail-jk))))
+(defun my-ensure-key-chord-wins ()
+  "Force key-chord to be the primary input-method-function."
+  (when (derived-mode-p 'lean4-mode)
+    (setq-local input-method-function #'key-chord-input-method)))
+
+   (defun my-lean-key-chord-fix ()
+   "Force key-chord to take over input-method-function in Lean."
+   ;; We use a tiny delay to ensure Lean's own input-method setup is finished
+   (run-with-idle-timer 0.1 nil
+			(lambda ()
+			    (add-hook 'post-command-hook #'my-ensure-key-chord-wins nil t)
+			    (when (derived-mode-p 'lean4-mode)
+			    (key-chord-mode -1) ; Toggle off
+			    (key-chord-mode 1))))) ; Toggle on to seize control
+
+   (add-hook 'lean4-mode-hook #'my-lean-key-chord-fix)
+
+(use-package company-math)
+;; (setq-local company-backends 
+;;             '(
+;;             company-math-symbols-unicode  
+;;             company-keywords         
+;;             (company-capf company-dabbrev)
+;; 	    ))
+;; (add-to-list 'company-backends 'company-math-symbols-unicode)
+
 
 (my-leader-def 'lean4-mode-map
   "l l" 'lean4-toggle-info
@@ -698,12 +877,6 @@
   (key-chord-define evil-visual-state-map  "jk" 'evil-normal-state)
   (key-chord-define evil-insert-state-map  "jj" "\\")
 )
-;; Copilot
-
-(use-package copilot
-  :vc (:url "https://github.com/copilot-emacs/copilot.el"
-            :rev :newest
-            :branch "main"))
 
 ;; org-mode
 
