@@ -127,6 +127,9 @@
 ;;Recommended to enable vi-mode in bashrc or zshrc instead
 (evil-set-initial-state 'term-mode 'emacs)
 
+(use-package evil-commentary)
+(evil-commentary-mode)
+
 (use-package evil-smartparens)
 
 ;;(use-package evil-magit)
@@ -892,5 +895,8 @@ See also `org-save-all-org-buffers'"
   )
 
 ;;
+
+(setq native-comp-async-report-warnings-errors 'silent)
+
 (provide '.emacs)
 ;;; .emacs ends here
