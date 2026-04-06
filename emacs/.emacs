@@ -226,6 +226,8 @@
   (add-hook 'org-mode-hook
 	    (lambda ()
 	      (embrace-add-pair ?m "\\(" "\\)")
+	      (embrace-add-pair ?M "\\[" "\\]")
+	      (embrace-add-pair ?l "\\left(" "\\right)")
 	      (embrace-add-pair ?a "\\begin{align*}" "\\end{align*}")
 	      (embrace-add-pair ?E "\\begin{equation}" "\\end{equation}")
 	      (defun embrace-with-command ()
@@ -332,18 +334,23 @@
   (skeletor-define-template "worksheet-skeleton"
     :title "worksheet-skeleton"
     :substitutions
-    '(("__WORKSHEETNUM__" . (lambda () (read-string "Worksheet Number: "))) ("__SECTIONNUM__" . (lambda () (read-string "Section Number: ")))))
+    '(("__WORKSHEETNUM__" . (lambda () (read-string "Worksheet Number: "))) ("__SECTIONNUM__" . (lambda () (read-string "Section Number: "))))
+    :no-license? t)
   (skeletor-define-template "quiz-skeleton"
     :title "quiz-skeleton"
     :substitutions
     '(("__QUIZNUM__" . (lambda () (read-string "Quiz Number: "))))
-    )
+    :no-license? t)
   (skeletor-define-template "learn-alco-talk-skeleton"
     :title "learn-alco-talk-skeleton"
     :substitutions
     '(("__TALKDATE__" . (lambda () (read-string "Date of Talk (YYYY-MM-dd): "))) ("__SPEAKERFIRSTNAME__" . (lambda () (read-string "Speaker First Name: "))) ("__SPEAKERLASTNAME__" . (lambda () (read-string "Speaker Last Name: "))) ("__TALKTITLE__" . (lambda () (read-string "Talk Title: "))) ("__ABSTRACT__" . (lambda () (read-string "Talk Abstract: "))))
     :no-license? t)
-  
+  (skeletor-define-template "exam-skeleton"
+    :title "exam-skeleton"
+    :substitutions
+    '(("__CLASSNAME__" . (lambda () (read-string "Class Name: "))) ("__EXAMNUM__" . (lambda () (read-string "Exam number: "))) ("__TERM__" . (lambda () (read-string "Term: "))))
+    :no-license? t)
     ;; '(("__DESCRIPTION__" . (lambda () (read-string "Description: "))))
     ;; :substitutions
     ;; 
@@ -452,6 +459,10 @@
   (add-hook 'LaTeX-mode-hook (lambda () (electric-pair-local-mode 'toggle)))
 )
 
+;; nerd icons required for doom modeline
+(use-package nerd-icons)
+
+;; change modeline to doom-modeline
 (use-package doom-modeline
 :ensure t
 :init (doom-modeline-mode 1)
@@ -656,6 +667,24 @@
   "r r" 'ivy-bibtex-with-local-bibliography
   "r l" 'my-label-ref
   )
+
+;; Python
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+
+(use-package pyvenv
+  :ensure t
+  :config
+  (pyvenv-mode 1)
+  ;; This hook ensures Org-babel uses the python executable 
+  ;; from the currently active virtual environment.
+  (add-hook 'pyvenv-post-activate-hook
+            (lambda ()
+              (setq org-babel-python-command (executable-find "python")))))
+
+;; (setq org-babel-python-command "python3")
 
 ;; Haskell
 
@@ -971,6 +1000,8 @@ See also `org-save-all-org-buffers'"
 (use-package org-inline-pdf)
 (add-hook 'org-mode-hook #'org-inline-pdf-mode)
 
+
+
 (use-package org-noter)
 
 ;; Journaling
@@ -1015,12 +1046,10 @@ See also `org-save-all-org-buffers'"
 ;(setq org-roam-directory (file-truename "~/Documents/org-roam/"))
 ;(org-roam-db-autosync-mode)
 
-(use-package org-roam-ui)
-(add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
-(load-library "org-roam-ui")
+;; (use-package org-roam-ui)
+;; (add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
+;; (load-library "org-roam-ui")
 
-(use-package org-fragtog)
-(add-hook 'org-mode-hook 'org-fragtog-mode)
 
 ; (use-package org-ref)
 
@@ -1034,12 +1063,21 @@ See also `org-save-all-org-buffers'"
 (require 'oc-csl)
 (require 'oc-natbib)
 
-;; (setq org-preview-latex-default-process 'dvisvgm)
 (add-to-list 'org-latex-packages-alist
              '("" "tikz" t))
 
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t))
+
+(setq org-preview-latex-default-process 'dvisvgm)
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+
+(use-package org-fragtog)
+(add-hook 'org-mode-hook 'org-fragtog-mode)
+
+(require 'org-persist)
+(add-hook 'org-mode-hook #'org-persist-load-all)
+;; (setq org-persist-after-read-hook 'org-persist-load-all)
 
 ;; (setq org-latex-create-formula-image-program 'imagemagick)
 
