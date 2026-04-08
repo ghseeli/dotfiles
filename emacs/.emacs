@@ -759,8 +759,118 @@
 
 (add-to-list 'load-path "~/.emacs.d/lean4-mode")
 (require 'lean4-mode)
+(setq lean4-info-plain nil)
 
 ;; Code to give Lean more RAM and CPUs, courtesy of @cjrl.
+
+(use-package eldoc-box
+    :config
+    (eldoc-box-hover-at-point-mode 1))
+  
+(add-hook 'lean4-mode-hook #'eldoc-box-hover-at-point-mode)
+
+   ;; Do not let eglot set company backends
+    (setq eglot-stay-out-of '(company))
+
+    (use-package company-math)
+
+    (defun my-lean4-company-setup ()
+      "Set up company backends for Lean4 after mode initialization."
+      (setq-local company-backends
+                   '(company-math-symbols-unicode
+    		 company-keywords
+                    (company-capf company-dabbrev)))
+      (setq-local company-minimum-prefix-length 2))
+
+    ;; Apply AFTER lean4-mode sets up
+    (add-hook 'lean4-mode-hook #'my-lean4-company-setup)
+
+    ;; If that doesn't work, use advice to force it after eglot starts
+    (advice-add 'eglot-ensure :after
+                (lambda (&rest _)
+                  (when (derived-mode-p 'lean4-mode)
+                    (my-lean4-company-setup))))
+
+    ;; (use-package czm-lean4
+      ;; :straight (czm-lean4 :type git :host github
+        		       ;; :repo "ultronozm/czm-lean4.el"))
+
+    ;; (add-hook 'lean4-mode-hook
+    ;;     	  (lambda ()
+    ;; 	    (advice-add 'lean4-info-buffer-redisplay :around #'czm-lean4-info-buffer-redisplay)
+    ;; 	    (advice-add 'lean4-info-buffer-redisplay :after #'czm-lean4--goal-overlay-update-adapter)))
+
+    ;; (defun czm-add-lean4-eldoc ()
+    ;;   (when (with-current-buffer eldoc-icebox-parent-buffer
+    ;;           (or (eq major-mode 'lean4-mode)
+    ;;               (equal (buffer-name)
+    ;;                      "*Lean Goal*")))
+    ;;     (add-hook 'eldoc-documentation-functions #'lean4-info-eldoc-function
+    ;;               nil t)
+    ;;     (eldoc-mode)))
+
+    ;; (use-package eldoc-icebox
+    ;;   :straight (:host github :repo "ultronozm/eldoc-icebox.el" :depth nil)
+    ;;   :bind (("C-c C-h" . eldoc-icebox-store)
+    ;;          ("C-c C-n" . eldoc-icebox-toggle-display))
+    ;;   :hook
+    ;;   (eldoc-icebox-post-display . shrink-window-if-larger-than-buffer)
+    ;;   (eldoc-icebox-post-display . czm-lean4-fontify-buffer)
+    ;;   (eldoc-icebox-post-display . czm-add-lean4-eldoc))
+    
+  (use-package aggressive-indent)
+  (with-eval-after-load 'lean4-mode
+  (defun lean4-indent-line ()
+    "Lean 4 indent line function.
+  If point is at the end of the current indentation, use `lean4-eri-indent';
+  or if point is before that position, move it there; or do nothing, to allow
+  tab completion (if configured)."
+    (let ((cur-column (current-column))
+          (cur-indent (current-indentation)))
+      (cond 
+       ;; New blank line: use previous line's indent
+       ((and (= cur-column 0) 
+             (= cur-indent 0)
+             (looking-at "^[[:space:]]*$"))
+        (let ((prev-indent (save-excursion
+                             (forward-line -1)
+                             (current-indentation))))
+          (when (> prev-indent 0)
+            (indent-line-to prev-indent))))
+       
+       ((= cur-column cur-indent)
+        (lean4-eri-indent))
+       ((< cur-column cur-indent)
+        (move-to-column cur-indent))))))
+
+
+    (add-hook 'lean4-mode-hook
+         (lambda ()
+            ;; 1. Disable aggressive-indent-mode
+            (aggressive-indent-mode -1)
+            
+            ;; 2. Enable eldoc-box hover (mouse) mode
+            (eldoc-box-mouse-mode 1)
+            
+            ;; 3. Disable eldoc-box hover-at-point mode
+            (eldoc-box-hover-at-point-mode -1)))
+
+    ;; Find the goal buffer mode name first
+    ;; It's likely lean4-info-mode or similar
+    (add-hook 'lean4-info-mode-hook
+  	    (lambda ()
+  		(eldoc-box-hover-mode 1)
+  		(eldoc-box-hover-at-point-mode -1)))
+
+  ;; For goal buffer - only apply to Lean-related magit-section buffers
+    (add-hook 'magit-section-mode-hook
+		(lambda ()
+		    ;; Only configure if this is a Lean buffer
+		    (when (string-match-p "\\*Lean" (buffer-name))
+		    (eldoc-box-mouse-mode 1)
+		    (eldoc-box-hover-at-point-mode -1))))
+
+
 
 (with-eval-after-load 'lean4-mode
   (setq lean4-memory-limit 24000) 
@@ -786,62 +896,62 @@
                "-M" ,(number-to-string lean4-memory-limit)
                "-j" "12")))))
 
-(require 'json)
+;; (require 'json)
 
- (setq my-lean-symbols
-	(let ((json-file-path (expand-file-name "lean-symbols.json" user-emacs-directory)))
-	  (when (file-exists-p json-file-path)
-	    (with-temp-buffer
-	      (insert-file-contents json-file-path)
-	      (goto-char (point-min))
-	      ;; In json-parse-buffer, 'alist' usually forces keys to symbols.
-	      ;; We'll parse it and then ensure keys are strings if they aren't already.
-	      (let ((raw-data (json-parse-buffer :object-type 'alist)))
-		(mapcar (lambda (pair)
-			  (cons (format "%s" (car pair)) (cdr pair)))
-			raw-data))))))
+;;  (setq my-lean-symbols
+;; 	(let ((json-file-path (expand-file-name "lean-symbols.json" user-emacs-directory)))
+;; 	  (when (file-exists-p json-file-path)
+;; 	    (with-temp-buffer
+;; 	      (insert-file-contents json-file-path)
+;; 	      (goto-char (point-min))
+;; 	      ;; In json-parse-buffer, 'alist' usually forces keys to symbols.
+;; 	      ;; We'll parse it and then ensure keys are strings if they aren't already.
+;; 	      (let ((raw-data (json-parse-buffer :object-type 'alist)))
+;; 		(mapcar (lambda (pair)
+;; 			  (cons (format "%s" (car pair)) (cdr pair)))
+;; 			raw-data))))))
 
-   (defun company-my-lean-symbols (command &optional arg &rest _ignored)
-   (interactive (list 'interactive))
-   (cl-case command
-	(interactive (company-begin-backend 'company-my-lean-symbols))
-	;; 1. Grab everything including the backslash
-	(prefix (company-grab-symbol-cons "[^[:space:]]+" 0))
-	(candidates
-	(let ((query (string-remove-prefix "\\" arg)))
-	(cl-loop for (trigger . symbol) in my-lean-symbols
-		    if (string-prefix-p query trigger)
-		    collect trigger)))
-	(annotation
-	(concat " " (cdr (assoc arg my-lean-symbols))))
-	(post-completion
-	(let ((symbol (cdr (assoc arg my-lean-symbols))))
-	(when symbol
-	    ;; 2. Logic to "gobble" the backslash if it exists
-	    (let* ((end (point))
-		    (start (- end (length arg)))
-		    ;; Check if the character right before our match is a backslash
-		    (maybe-backslash (char-before start)))
-	    (if (eq maybe-backslash ?\\)
-		(delete-region (1- start) end)
-		(delete-region start end))
-	    (insert symbol)))))))
+;;    (defun company-my-lean-symbols (command &optional arg &rest _ignored)
+;;    (interactive (list 'interactive))
+;;    (cl-case command
+;; 	(interactive (company-begin-backend 'company-my-lean-symbols))
+;; 	;; 1. Grab everything including the backslash
+;; 	(prefix (company-grab-symbol-cons "[^[:space:]]+" 0))
+;; 	(candidates
+;; 	(let ((query (string-remove-prefix "\\" arg)))
+;; 	(cl-loop for (trigger . symbol) in my-lean-symbols
+;; 		    if (string-prefix-p query trigger)
+;; 		    collect trigger)))
+;; 	(annotation
+;; 	(concat " " (cdr (assoc arg my-lean-symbols))))
+;; 	(post-completion
+;; 	(let ((symbol (cdr (assoc arg my-lean-symbols))))
+;; 	(when symbol
+;; 	    ;; 2. Logic to "gobble" the backslash if it exists
+;; 	    (let* ((end (point))
+;; 		    (start (- end (length arg)))
+;; 		    ;; Check if the character right before our match is a backslash
+;; 		    (maybe-backslash (char-before start)))
+;; 	    (if (eq maybe-backslash ?\\)
+;; 		(delete-region (1- start) end)
+;; 		(delete-region start end))
+;; 	    (insert symbol)))))))
 
-;;(use-package company-math)
-(add-hook 'lean4-mode-hook
-	  (lambda ()
-	    (setq-local company-backends 
-		'(;;company-math-symbols-unicode
-		    company-my-lean-symbols
-                    company-keywords
-		    (
-		    company-dabbrev 
-		    ;; company-dabbrev-code 
-		    ;; company-files 
-		    company-capf 
-		    ;; company-semantic
-		    ;; company-clang
-		    )))))
+;; ;;(use-package company-math)
+;; (add-hook 'lean4-mode-hook
+;; 	  (lambda ()
+;; 	    (setq-local company-backends 
+;; 		'(;;company-math-symbols-unicode
+;; 		    company-my-lean-symbols
+;;                     company-keywords
+;; 		    (
+;; 		    company-dabbrev 
+;; 		    ;; company-dabbrev-code 
+;; 		    ;; company-files 
+;; 		    company-capf 
+;; 		    ;; company-semantic
+;; 		    ;; company-clang
+;; 		    )))))
 
 ;; (add-hook 'lean4-mode-hook (lambda () (
 ;; (setq-local company-backends 
